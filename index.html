@@ -1,0 +1,972 @@
+<!DOCTYPE html>
+<html lang="gu">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>Track - Smart Expense & Khata</title>
+  <!-- App Icon / Logo linking -->
+  <link rel="icon" type="image/png" href="logo.png">
+  <link rel="apple-touch-icon" href="logo.png">
+  <!-- Tailwind CSS CDN -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    body {
+      background-color: #0d0f12;
+      color: #f3f4f6;
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    .custom-scroll::-webkit-scrollbar { display: none; }
+    .custom-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+  </style>
+</head>
+<body class="flex justify-center min-h-screen">
+
+  <!-- Main Mobile App Wrapper -->
+  <div class="w-full max-w-md bg-[#12151b] flex flex-col min-h-screen relative shadow-2xl pb-24">
+    
+    <!-- TOP HEADER -->
+    <header class="p-4 flex items-center justify-between border-b border-gray-800 bg-[#161a23]/90 sticky top-0 z-30 backdrop-blur">
+      <div id="logoTitle" class="cursor-pointer active:scale-95 transition-transform select-none flex items-center gap-2.5">
+        <img src="logo.png" onerror="this.style.display='none'; document.getElementById('fallbackIcon').classList.remove('hidden')" class="w-8 h-8 rounded-xl object-cover border border-orange-500/40 shadow" alt="Track Logo" />
+        <span id="fallbackIcon" class="hidden text-2xl">💰</span>
+        <div>
+          <h1 class="text-lg font-bold text-orange-400 flex items-center gap-1.5 leading-none">
+            <span id="appHeaderName">Track</span>
+          </h1>
+          <p class="text-[9px] text-gray-400 mt-0.5">લોગો પર 3 સેકન્ડ દબાવો (ગુપ્ત તિજોરી)</p>
+        </div>
+      </div>
+      <div class="flex items-center gap-2">
+        <span id="userBadge" class="bg-gray-800 text-orange-300 text-xs px-2.5 py-1 rounded-full font-medium border border-gray-700">પ્રિન્સ</span>
+      </div>
+    </header>
+
+    <!-- CONTENT TABS CONTAINER -->
+    <main class="flex-1 p-4 overflow-y-auto custom-scroll">
+
+      <!-- ================= 1. DASHBOARD TAB ================= -->
+      <section id="tab-dashboard" class="space-y-4">
+        
+        <!-- MAIN BALANCE CARD (AVAILABLE IN POCKET) -->
+        <div class="bg-gradient-to-br from-orange-600 to-amber-600 rounded-3xl p-5 shadow-lg shadow-orange-950/40 relative overflow-hidden">
+          <div class="flex justify-between items-start">
+            <span class="text-xs uppercase tracking-wider text-orange-100 font-semibold">હાજર બેલેન્સ (રોકડા/બેંક)</span>
+            <button onclick="openBalanceModal()" class="bg-black/30 hover:bg-black/40 text-white text-xs px-2.5 py-1 rounded-full font-semibold border border-white/20 transition-all flex items-center gap-1">
+              <span>✏️</span> એડજસ્ટ
+            </button>
+          </div>
+
+          <!-- BIG TOUCHABLE NUMBER FOR EXPENSE HISTORY -->
+          <div onclick="openPersonalHistoryModal()" class="my-3 cursor-pointer group">
+            <div class="flex items-baseline gap-1">
+              <span class="text-4xl font-extrabold tracking-tight text-white group-hover:scale-[1.02] transition-transform" id="mainAvailableBal">₹0</span>
+              <span class="text-xs text-orange-200">👆 ટચ કરો (ખર્ચ હિસ્ટ્રી)</span>
+            </div>
+          </div>
+
+          <!-- NET FRIENDS SUMMARY (TO RECEIVE / TO PAY) -->
+          <div class="pt-3 border-t border-white/20 flex items-center justify-between text-xs">
+            <span class="text-orange-100">મિત્રો સાથે નેટ હિસાબ:</span>
+            <span id="netFriendsBadge" class="font-bold px-2 py-0.5 rounded-full text-xs bg-black/30 text-white">
+              ₹0
+            </span>
+          </div>
+        </div>
+
+        <!-- QUICK ACTION BAR -->
+        <div class="flex items-center justify-between gap-2 pt-1">
+          <h2 class="text-sm font-semibold text-gray-300">મિત્રોના ખાતા</h2>
+          <button onclick="openManualAddModal()" class="bg-orange-500 hover:bg-orange-600 active:scale-95 text-white text-xs font-semibold px-3 py-1.5 rounded-xl flex items-center gap-1 shadow">
+            <span>+</span> નવો ખર્ચ ઉમેરો
+          </button>
+        </div>
+
+        <!-- FRIENDS KHATA LIST -->
+        <div id="friendsListContainer" class="space-y-2.5">
+          <!-- Populated by JS -->
+        </div>
+
+        <!-- EMPTY STATE -->
+        <div id="emptyFriendsPlaceholder" class="text-center py-10 text-gray-500 text-xs hidden">
+          હજી કોઈ મિત્રનું ખાતું નથી. ઉપર 'નવો ખર્ચ ઉમેરો' અથવા 'AI ચેટ' માંથી હિસાબ લખો!
+        </div>
+
+      </section>
+
+      <!-- ================= 2. AI CHAT TAB ================= -->
+      <section id="tab-ai" class="hidden space-y-4">
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl p-4">
+          <div class="flex items-center gap-2 mb-2">
+            <span class="text-lg">✨</span>
+            <h2 class="text-sm font-bold text-orange-400">AI સ્માર્ટ એન્ટ્રી (ગુજરાતી / Gujlish)</h2>
+          </div>
+          <p class="text-xs text-gray-400 mb-3">
+            સીધું કુદરતી ભાષામાં લખો. AI આપોઆપ મિત્રો, રકમ અને ખર્ચનો પ્રકાર અલગ પાડી દેશે!
+          </p>
+          <div class="space-y-1.5 text-[11px] text-gray-400 bg-gray-950 p-2.5 rounded-xl border border-gray-800/80 mb-3">
+            <p class="text-gray-300 font-semibold">ઉદાહરણો:</p>
+            <p>• "હું, ક્રિશ અને રાજ ૩૦૦ ના ખાવસા ખાવા ગયા મેં ચૂકવ્યા ત્રણેયના ૧૦૦-૧૦૦ થયા"</p>
+            <p>• "રાજે ૧૫૦ ની ચા પીવડાવી મારો હિસ્સો ૫૦ હતો"</p>
+            <p>• "આજે રિક્ષા ભાડું ૨૦ રોકડા વાપર્યા"</p>
+          </div>
+
+          <textarea id="aiInputText" rows="3" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-orange-500" placeholder="અહીં ગુજરાતીમાં લખો..."></textarea>
+
+          <button id="btnAiProcess" onclick="processAiEntry()" class="w-full mt-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 active:scale-95 transition-all shadow">
+            <span>🚀 હિસાબ સમજીને એન્ટ્રી પાડો</span>
+          </button>
+        </div>
+
+        <!-- AI PARSED PREVIEW / RESULT BOX -->
+        <div id="aiResultCard" class="hidden bg-gray-900 border border-gray-700 rounded-2xl p-4 space-y-3">
+          <h3 class="text-xs font-bold text-gray-200 uppercase">AI નું એનાલિસિસ:</h3>
+          <div id="aiResultContent" class="text-xs space-y-1.5 text-gray-300"></div>
+          <button onclick="confirmAiEntry()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-xl text-xs font-bold">
+            ✓ હિસાબ કન્ફર્મ કરો અને સેવ કરો
+          </button>
+        </div>
+      </section>
+
+      <!-- ================= 3. PROFILE & SETTINGS TAB ================= -->
+      <section id="tab-profile" class="hidden space-y-4 text-xs">
+        <div class="bg-gray-900 border border-gray-800 rounded-2xl p-4 space-y-3">
+          <h2 class="text-sm font-bold text-white mb-2">પ્રોફાઇલ સેટિંગ્સ</h2>
+          <div>
+            <label class="block text-gray-400 mb-1">તમારું નામ (User Name):</label>
+            <input type="text" id="settingUserName" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2.5 text-white" />
+          </div>
+          <div>
+            <label class="block text-gray-400 mb-1">ગુપ્ત તિજોરીનો PIN (4 આંકડા):</label>
+            <input type="password" maxlength="4" id="settingUserPin" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2.5 text-white" />
+          </div>
+          <div>
+            <label class="block text-gray-400 mb-1">Google Gemini API Key (વૈકલ્પિક - સ્માર્ટ AI માટે):</label>
+            <input type="password" id="settingApiKey" placeholder="AI Studio માંથી મળેલી કી અહીં પેસ્ટ કરો" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2.5 text-white" />
+          </div>
+          <button onclick="saveProfileSettings()" class="w-full bg-orange-500 py-2.5 rounded-xl font-bold text-white active:scale-95">
+            સેટિંગ્સ સેવ કરો
+          </button>
+        </div>
+
+        <div class="bg-gray-900/60 border border-gray-800 rounded-2xl p-4 space-y-2 text-gray-400">
+          <h3 class="font-bold text-gray-300">કાયમી નિયમો:</h3>
+          <p>• <strong>૧૦ મિનિટ લોક:</strong> નવી એન્ટ્રી પડ્યા પછી ૧૦ મિનિટ સુધી જ એડિટ/ડિલીટ થઈ શકશે. ત્યારપછી ૩૦ દિવસ સુધી લૉક રહેશે.</p>
+          <p>• <strong>ગુપ્ત તિજોરી:</strong> ઉપરના 'Track' લોગો પર ૩ સેકન્ડ દબાવી રાખવાથી ખુલે છે.</p>
+        </div>
+
+        <button onclick="resetAllAppData()" class="w-full text-red-400 border border-red-900/50 hover:bg-red-950/30 py-2.5 rounded-xl font-semibold">
+          ⚠️ બધો ડેટા સાફ કરો (Factory Reset)
+        </button>
+      </section>
+
+    </main>
+
+    <!-- ================= BOTTOM NAVIGATION BAR (3 ICONS) ================= -->
+    <nav class="fixed bottom-0 w-full max-w-md bg-[#161a23] border-t border-gray-800 flex justify-around items-center py-2.5 z-40">
+      <button onclick="switchTab('dashboard')" id="nav-dashboard" class="flex flex-col items-center text-orange-400 text-[11px] font-medium transition-colors">
+        <span class="text-xl">📊</span>
+        <span>હિસાબ</span>
+      </button>
+
+      <button onclick="switchTab('ai')" id="nav-ai" class="flex flex-col items-center text-gray-400 text-[11px] font-medium transition-colors">
+        <span class="text-xl">✨</span>
+        <span>AI ચેટ</span>
+      </button>
+
+      <button onclick="switchTab('profile')" id="nav-profile" class="flex flex-col items-center text-gray-400 text-[11px] font-medium transition-colors">
+        <span class="text-xl">⚙️</span>
+        <span>પ્રોફાઇલ</span>
+      </button>
+    </nav>
+
+    <!-- ================= MODALS ================= -->
+
+    <!-- MODAL 1: ADJUST AVAILABLE BALANCE -->
+    <div id="modalBalance" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
+      <div class="bg-gray-900 border border-gray-700 w-full max-w-xs rounded-3xl p-5 space-y-4">
+        <h3 class="text-sm font-bold text-white">હાજર બેલેન્સ અપડેટ કરો</h3>
+        <p class="text-xs text-gray-400">તમારા ખિસ્સામાં કે બેંકમાં અત્યારે સાચે જ કેટલા રૂપિયા પડ્યા છે?</p>
+        <input type="number" id="inputNewBalance" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-3 text-lg font-bold text-white focus:outline-none" placeholder="દા.ત. 2000" />
+        <div class="flex gap-2">
+          <button onclick="closeModal('modalBalance')" class="w-1/2 py-2.5 rounded-xl border border-gray-700 text-xs text-gray-300">કેન્સલ</button>
+          <button onclick="saveAvailableBalance()" class="w-1/2 py-2.5 rounded-xl bg-orange-500 font-bold text-xs text-white">સેવ કરો</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 2: PERSONAL EXPENSE HISTORY (OPENED BY CLICKING BIG NUMBER) -->
+    <div id="modalPersonalHistory" class="fixed inset-0 bg-black/80 z-50 hidden flex flex-col justify-end p-0">
+      <div class="bg-gray-900 border-t border-gray-700 w-full max-w-md mx-auto rounded-t-3xl max-h-[85vh] flex flex-col p-5 space-y-3">
+        <div class="flex justify-between items-center pb-2 border-b border-gray-800">
+          <div>
+            <h3 class="text-sm font-bold text-white">અંગત ખર્ચની હિસ્ટ્રી</h3>
+            <p class="text-[11px] text-gray-400">તમે કઈ તારીખે ક્યાં કેટલા વાપર્યા</p>
+          </div>
+          <button onclick="closeModal('modalPersonalHistory')" class="text-gray-400 text-lg p-1">✕</button>
+        </div>
+
+        <div id="personalExpenseList" class="flex-1 overflow-y-auto space-y-2.5 custom-scroll text-xs">
+          <!-- Populated by JS -->
+        </div>
+
+        <button onclick="closeModal('modalPersonalHistory'); openManualAddModal(true)" class="w-full bg-orange-500 py-2.5 rounded-xl text-xs font-bold text-white">
+          + નવો અંગત ખર્ચ ઉમેરો
+        </button>
+      </div>
+    </div>
+
+    <!-- MODAL 3: FRIEND KHATA DETAIL VIEW (WITH 2 TABS & PARTIAL SETTLE) -->
+    <div id="modalFriendDetail" class="fixed inset-0 bg-black/80 z-50 hidden flex flex-col justify-end p-0">
+      <div class="bg-gray-900 border-t border-gray-700 w-full max-w-md mx-auto rounded-t-3xl max-h-[90vh] flex flex-col p-5 space-y-4">
+        
+        <div class="flex justify-between items-start">
+          <div>
+            <h3 id="friendDetailName" class="text-base font-bold text-white">મિત્રનું નામ</h3>
+            <div id="friendDetailNetBadge" class="text-xs font-semibold mt-1">નેટ બાકી: ₹0</div>
+          </div>
+          <button onclick="closeModal('modalFriendDetail')" class="text-gray-400 text-lg p-1">✕</button>
+        </div>
+
+        <!-- SETTLEMENT BOX (PARTIAL + FULL ₹0) -->
+        <div class="bg-[#161a23] p-3 rounded-2xl border border-gray-800 space-y-2">
+          <span class="text-[11px] font-semibold text-gray-300">ચૂકવણી / હિસાબ ક્લિયર કરો:</span>
+          <div class="flex gap-2">
+            <input type="number" id="inputPartialSettle" placeholder="મળેલ રકમ (દા.ત. 200)" class="w-2/3 bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white" />
+            <button onclick="submitPartialSettle()" class="w-1/3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold">
+              જમા લો
+            </button>
+          </div>
+          <button onclick="submitFullSettle()" class="w-full bg-gray-800 hover:bg-gray-700 border border-gray-700 text-orange-300 py-1.5 rounded-xl text-xs font-semibold">
+            ✓ પૂરા ચૂકતે (હિસાબ ₹0 કરો)
+          </button>
+        </div>
+
+        <!-- 2 TABS: LEVANA VS AAPVANA -->
+        <div class="flex border-b border-gray-800 text-xs">
+          <button id="btnTabLevana" onclick="switchFriendSubTab('levana')" class="w-1/2 py-2 border-b-2 border-emerald-500 font-bold text-emerald-400">
+            લેવાના (To Receive)
+          </button>
+          <button id="btnTabAapvana" onclick="switchFriendSubTab('aapvana')" class="w-1/2 py-2 border-b-2 border-transparent font-medium text-gray-400">
+            આપવાના (To Pay)
+          </button>
+        </div>
+
+        <!-- TRANSACTION ITEMS -->
+        <div id="friendTransactionsList" class="flex-1 overflow-y-auto space-y-2 custom-scroll text-xs">
+          <!-- Populated by JS -->
+        </div>
+
+      </div>
+    </div>
+
+    <!-- MODAL 4: MANUAL QUICK ADD -->
+    <div id="modalManualAdd" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
+      <div class="bg-gray-900 border border-gray-700 w-full max-w-xs rounded-3xl p-5 space-y-3 text-xs">
+        <h3 class="text-sm font-bold text-white">નવો ખર્ચ ઉમેરો</h3>
+        
+        <div>
+          <label class="block text-gray-400 mb-1">શેના માટે વાપર્યા? (વિગત):</label>
+          <input type="text" id="manualDesc" placeholder="દા.ત. નાસ્તો, રિક્ષા, ખાવસા" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2.5 text-white" />
+        </div>
+
+        <div>
+          <label class="block text-gray-400 mb-1">કુલ રકમ (₹):</label>
+          <input type="number" id="manualAmount" placeholder="દા.ત. 300" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2.5 text-white font-bold" />
+        </div>
+
+        <div>
+          <label class="block text-gray-400 mb-1">આ ખર્ચ કોનો છે?</label>
+          <select id="manualType" onchange="toggleManualFriendInput()" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2.5 text-white">
+            <option value="PERSONAL">મારો અંગત ખર્ચ (ફક્ત મારો)</option>
+            <option value="FRIEND_LEVAN">મિત્ર માટે ચૂકવ્યા (લેવાના નીકળે)</option>
+            <option value="FRIEND_APVAN">મિત્રએ મારા માટે ચૂકવ્યા (આપવાના)</option>
+          </select>
+        </div>
+
+        <div id="manualFriendBox" class="hidden">
+          <label class="block text-gray-400 mb-1">મિત્રનું નામ:</label>
+          <input type="text" id="manualFriendName" placeholder="દા.ત. ક્રિશ" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2.5 text-white" />
+        </div>
+
+        <div class="flex gap-2 pt-2">
+          <button onclick="closeModal('modalManualAdd')" class="w-1/2 py-2.5 rounded-xl border border-gray-700 text-gray-300">કેન્સલ</button>
+          <button onclick="submitManualExpense()" class="w-1/2 py-2.5 rounded-xl bg-orange-500 font-bold text-white">ઉમેરો</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- MODAL 5: SECRET SAVINGS VAULT (3-SEC LONG PRESS TRIGGER) -->
+    <div id="modalSecretVault" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center p-4">
+      <div class="bg-gray-900 border border-amber-600/50 w-full max-w-xs rounded-3xl p-5 space-y-4 text-xs">
+        
+        <!-- PIN SCREEN -->
+        <div id="vaultPinSection" class="space-y-3 text-center">
+          <span class="text-3xl">🤫</span>
+          <h3 class="text-sm font-bold text-amber-400">ગુપ્ત તિજોરી</h3>
+          <p class="text-[11px] text-gray-400">પ્રવેશવા માટે 4 આંકડાનો PIN નાખો</p>
+          <input type="password" maxlength="4" id="vaultPinInput" class="w-32 mx-auto text-center tracking-widest text-lg font-bold bg-[#161a23] border border-gray-700 rounded-xl p-2 text-white" placeholder="••••" />
+          <div class="flex gap-2 pt-2">
+            <button onclick="closeModal('modalSecretVault')" class="w-1/2 py-2 rounded-xl border border-gray-700 text-gray-400">બંધ કરો</button>
+            <button onclick="verifyVaultPin()" class="w-1/2 py-2 rounded-xl bg-amber-600 font-bold text-white">અંદર જાઓ</button>
+          </div>
+        </div>
+
+        <!-- VAULT BALANCE & TRANSFER SCREEN -->
+        <div id="vaultMainSection" class="hidden space-y-4">
+          <div class="text-center">
+            <span class="text-gray-400 text-[11px]">તમારી છુપી બચત:</span>
+            <div id="vaultBalanceDisplay" class="text-3xl font-extrabold text-amber-400">₹0</div>
+            <p class="text-[10px] text-gray-500">આ રકમ મેઈન સ્ક્રીન પર કોઈનેય નહીં દેખાય!</p>
+          </div>
+
+          <div class="space-y-2 pt-2 border-t border-gray-800">
+            <label class="block text-gray-300 font-semibold">રૂપિયા છુપાવો / બહાર કાઢો:</label>
+            <input type="number" id="vaultAmountInput" placeholder="રકમ નાખો" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2 text-white font-bold" />
+            <div class="flex gap-2">
+              <button onclick="vaultDeposit()" class="w-1/2 bg-amber-600 py-2 rounded-xl text-white font-bold">
+                ↓ છુપાવો (Deposit)
+              </button>
+              <button onclick="vaultWithdraw()" class="w-1/2 bg-emerald-600 py-2 rounded-xl text-white font-bold">
+                ↑ બહાર કાઢો
+              </button>
+            </div>
+          </div>
+
+          <button onclick="closeModal('modalSecretVault')" class="w-full text-center text-gray-400 py-1">
+            તિજોરી લોક કરીને બહાર નીકળો
+          </button>
+        </div>
+
+      </div>
+    </div>
+
+  </div>
+
+  <!-- JAVASCRIPT APP LOGIC -->
+  <script>
+    const STORAGE_KEY = 'track_hisab_app_v1';
+
+    let appData = {
+      userName: 'પ્રિન્સ',
+      pin: '1234',
+      apiKey: '',
+      availableBalance: 2000,
+      secretBalance: 0,
+      personalExpenses: [
+        { id: 1, desc: 'એન્જિનિયરિંગ મટીરીયલ ઝેરોક્ષ', amount: 135, date: '04 Oct, 09:23 AM', timestamp: Date.now() - 3600000 },
+        { id: 2, desc: 'રિક્ષા ભાડું', amount: 30, date: '04 Oct, 09:23 AM', timestamp: Date.now() - 7200000 }
+      ],
+      friendsKhata: {
+        'ક્રિશ': [
+          { id: 101, type: 'TO_RECEIVE', desc: 'ખાવસા', amount: 100, date: '04 Oct, 10:00 AM', timestamp: Date.now() - 100000 },
+          { id: 102, type: 'TO_RECEIVE', desc: 'નાસ્તો', amount: 150, date: '04 Oct, 02:00 PM', timestamp: Date.now() - 50000 }
+        ],
+        'રાજ': [
+          { id: 201, type: 'TO_RECEIVE', desc: 'ખાવસા', amount: 100, date: '04 Oct, 10:00 AM', timestamp: Date.now() - 100000 }
+        ]
+      }
+    };
+
+    function loadData() {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (saved) {
+        try { appData = JSON.parse(saved); } catch(e) {}
+      }
+    }
+
+    function saveData() {
+      localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
+      renderDashboard();
+    }
+
+    function switchTab(tab) {
+      ['dashboard', 'ai', 'profile'].forEach(t => {
+        document.getElementById(`tab-${t}`).classList.add('hidden');
+        document.getElementById(`nav-${t}`).classList.remove('text-orange-400');
+        document.getElementById(`nav-${t}`).classList.add('text-gray-400');
+      });
+      document.getElementById(`tab-${tab}`).classList.remove('hidden');
+      document.getElementById(`nav-${tab}`).classList.add('text-orange-400');
+      document.getElementById(`nav-${tab}`).classList.remove('text-gray-400');
+    }
+
+    function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
+    function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
+
+    function renderDashboard() {
+      document.getElementById('userBadge').innerText = appData.userName || 'પ્રિન્સ';
+      document.getElementById('mainAvailableBal').innerText = `₹${appData.availableBalance}`;
+
+      let totalToReceive = 0;
+      let totalToPay = 0;
+
+      const friendsContainer = document.getElementById('friendsListContainer');
+      friendsContainer.innerHTML = '';
+      const friendNames = Object.keys(appData.friendsKhata);
+
+      if (friendNames.length === 0) {
+        document.getElementById('emptyFriendsPlaceholder').classList.remove('hidden');
+      } else {
+        document.getElementById('emptyFriendsPlaceholder').classList.add('hidden');
+      }
+
+      friendNames.forEach(name => {
+        const txs = appData.friendsKhata[name] || [];
+        let net = 0;
+        txs.forEach(t => {
+          if (t.type === 'TO_RECEIVE') { net += t.amount; totalToReceive += t.amount; }
+          else { net -= t.amount; totalToPay += t.amount; }
+        });
+
+        const isPositive = net >= 0;
+        const colorClass = isPositive ? 'text-emerald-400' : 'text-red-400';
+        const sign = isPositive ? '+' : '-';
+        const label = isPositive ? 'લેવાના' : 'આપવાના';
+
+        const card = document.createElement('div');
+        card.className = "bg-[#161a23] border border-gray-800 rounded-2xl p-4 flex items-center justify-between cursor-pointer active:scale-[0.98] transition-transform";
+        card.onclick = () => openFriendDetail(name);
+        card.innerHTML = `
+          <div class="flex items-center gap-3">
+            <div class="w-10 h-10 rounded-full bg-gray-800 border border-gray-700 flex items-center justify-center text-sm font-bold text-orange-300">
+              ${name.charAt(0)}
+            </div>
+            <div>
+              <h4 class="font-bold text-sm text-white">${name}</h4>
+              <p class="text-[11px] text-gray-400">${txs.length} વ્યવહારો નોંધાયેલા</p>
+            </div>
+          </div>
+          <div class="text-right">
+            <div class="text-base font-extrabold ${colorClass}">${sign} ₹${Math.abs(net)}</div>
+            <div class="text-[10px] text-gray-400">${label}</div>
+          </div>
+        `;
+        friendsContainer.appendChild(card);
+      });
+
+      const overallNet = totalToReceive - totalToPay;
+      const netBadge = document.getElementById('netFriendsBadge');
+      if (overallNet >= 0) {
+        netBadge.className = "font-bold px-2 py-0.5 rounded-full text-xs bg-emerald-950 text-emerald-300 border border-emerald-800";
+        netBadge.innerText = `+ ₹${overallNet} (લેવાના)`;
+      } else {
+        netBadge.className = "font-bold px-2 py-0.5 rounded-full text-xs bg-red-950 text-red-300 border border-red-800";
+        netBadge.innerText = `- ₹${Math.abs(overallNet)} (આપવાના)`;
+      }
+    }
+
+    function openBalanceModal() {
+      document.getElementById('inputNewBalance').value = appData.availableBalance;
+      openModal('modalBalance');
+    }
+    function saveAvailableBalance() {
+      const val = parseFloat(document.getElementById('inputNewBalance').value);
+      if (!isNaN(val)) {
+        appData.availableBalance = val;
+        saveData();
+        closeModal('modalBalance');
+      }
+    }
+
+    function openPersonalHistoryModal() {
+      const list = document.getElementById('personalExpenseList');
+      list.innerHTML = '';
+      if (!appData.personalExpenses || appData.personalExpenses.length === 0) {
+        list.innerHTML = `<div class="text-center text-gray-500 py-6">કોઈ અંગત ખર્ચ નોંધાયેલ નથી.</div>`;
+      } else {
+        appData.personalExpenses.forEach((exp) => {
+          const lockStatus = getLockStatus(exp.timestamp);
+          const item = document.createElement('div');
+          item.className = "bg-[#161a23] p-3 rounded-xl border border-gray-800 flex justify-between items-center";
+          item.innerHTML = `
+            <div>
+              <p class="font-bold text-white text-xs">${exp.desc}</p>
+              <p class="text-[10px] text-gray-400">${exp.date || 'આજે'} • ${lockStatus.label}</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold text-orange-400">₹${exp.amount}</span>
+              ${lockStatus.canDelete ? `
+                <button onclick="deletePersonalExpense(${exp.id})" class="text-red-400 hover:text-red-300 text-xs px-1">🗑️</button>
+              ` : `
+                <span class="text-gray-500 text-xs">🔒</span>
+              `}
+            </div>
+          `;
+          list.appendChild(item);
+        });
+      }
+      openModal('modalPersonalHistory');
+    }
+
+    function deletePersonalExpense(id) {
+      if (confirm('શું આ ખર્ચ ડિલીટ કરવો છે?')) {
+        const item = appData.personalExpenses.find(e => e.id === id);
+        if (item) {
+          appData.availableBalance += item.amount;
+          appData.personalExpenses = appData.personalExpenses.filter(e => e.id !== id);
+          saveData();
+          openPersonalHistoryModal();
+        }
+      }
+    }
+
+    function getLockStatus(timestamp) {
+      const now = Date.now();
+      const diffMs = now - (timestamp || 0);
+      const tenMinutesMs = 10 * 60 * 1000;
+      const thirtyDaysMs = 30 * 24 * 60 * 60 * 1000;
+
+      if (diffMs <= tenMinutesMs) {
+        const remainingMin = Math.ceil((tenMinutesMs - diffMs) / 60000);
+        return { canDelete: true, label: `⏱️ ${remainingMin} મિનિટમાં લૉક થશે` };
+      } else if (diffMs < thirtyDaysMs) {
+        return { canDelete: false, label: '🔒 લૉક (30 દિવસ)' };
+      } else {
+        return { canDelete: true, label: '🔓 જૂનો હિસાબ' };
+      }
+    }
+
+    let currentFriendName = null;
+    let currentFriendSubTab = 'levana';
+
+    function openFriendDetail(friendName) {
+      currentFriendName = friendName;
+      document.getElementById('friendDetailName').innerText = friendName;
+      switchFriendSubTab('levana');
+      renderFriendModalContent();
+      openModal('modalFriendDetail');
+    }
+
+    function switchFriendSubTab(subTab) {
+      currentFriendSubTab = subTab;
+      const btnL = document.getElementById('btnTabLevana');
+      const btnA = document.getElementById('btnTabAapvana');
+
+      if (subTab === 'levana') {
+        btnL.className = "w-1/2 py-2 border-b-2 border-emerald-500 font-bold text-emerald-400";
+        btnA.className = "w-1/2 py-2 border-b-2 border-transparent font-medium text-gray-400";
+      } else {
+        btnA.className = "w-1/2 py-2 border-b-2 border-red-500 font-bold text-red-400";
+        btnL.className = "w-1/2 py-2 border-b-2 border-transparent font-medium text-gray-400";
+      }
+      renderFriendModalContent();
+    }
+
+    function renderFriendModalContent() {
+      if (!currentFriendName) return;
+      const txs = appData.friendsKhata[currentFriendName] || [];
+      
+      let net = 0;
+      txs.forEach(t => {
+        if (t.type === 'TO_RECEIVE') net += t.amount;
+        else net -= t.amount;
+      });
+
+      const netBadge = document.getElementById('friendDetailNetBadge');
+      if (net >= 0) {
+        netBadge.className = "text-xs font-bold text-emerald-400";
+        netBadge.innerText = `કુલ લેવાના બાકી: ₹${net}`;
+      } else {
+        netBadge.className = "text-xs font-bold text-red-400";
+        netBadge.innerText = `કુલ આપવાના બાકી: ₹${Math.abs(net)}`;
+      }
+
+      const list = document.getElementById('friendTransactionsList');
+      list.innerHTML = '';
+
+      const targetType = currentFriendSubTab === 'levana' ? 'TO_RECEIVE' : 'TO_PAY';
+      const filtered = txs.filter(t => t.type === targetType);
+
+      if (filtered.length === 0) {
+        list.innerHTML = `<div class="text-center text-gray-500 py-6">આ ટેબમાં કોઈ વ્યવહાર નથી.</div>`;
+      } else {
+        filtered.forEach(tx => {
+          const lock = getLockStatus(tx.timestamp);
+          const item = document.createElement('div');
+          item.className = "bg-[#161a23] p-3 rounded-xl border border-gray-800 flex justify-between items-center";
+          item.innerHTML = `
+            <div>
+              <p class="font-bold text-white text-xs">${tx.desc}</p>
+              <p class="text-[10px] text-gray-400">${tx.date || 'આજે'} • ${lock.label}</p>
+            </div>
+            <div class="flex items-center gap-2">
+              <span class="font-extrabold ${tx.type === 'TO_RECEIVE' ? 'text-emerald-400' : 'text-red-400'}">₹${tx.amount}</span>
+              ${lock.canDelete ? `
+                <button onclick="deleteFriendTx(${tx.id})" class="text-red-400 text-xs px-1">🗑️</button>
+              ` : `
+                <span class="text-gray-500 text-xs">🔒</span>
+              `}
+            </div>
+          `;
+          list.appendChild(item);
+        });
+      }
+    }
+
+    function deleteFriendTx(txId) {
+      if (confirm('આ એન્ટ્રી ડિલીટ કરવી છે?')) {
+        appData.friendsKhata[currentFriendName] = appData.friendsKhata[currentFriendName].filter(t => t.id !== txId);
+        saveData();
+        renderFriendModalContent();
+      }
+    }
+
+    function submitPartialSettle() {
+      const val = parseFloat(document.getElementById('inputPartialSettle').value);
+      if (!val || val <= 0) { alert('માન્ય રકમ નાખો'); return; }
+
+      appData.availableBalance += val;
+      appData.friendsKhata[currentFriendName].push({
+        id: Date.now(),
+        type: 'TO_PAY',
+        desc: 'અંશતઃ ચૂકવણી જમા',
+        amount: val,
+        date: new Date().toLocaleDateString('gu-IN'),
+        timestamp: Date.now()
+      });
+
+      document.getElementById('inputPartialSettle').value = '';
+      saveData();
+      renderFriendModalContent();
+      alert(`₹${val} જમા થયા અને તમારા હાજર બેલેન્સમાં ઉમેરાઈ ગયા!`);
+    }
+
+    function submitFullSettle() {
+      const txs = appData.friendsKhata[currentFriendName] || [];
+      let net = 0;
+      txs.forEach(t => {
+        if (t.type === 'TO_RECEIVE') net += t.amount;
+        else net -= t.amount;
+      });
+
+      if (net === 0) { alert('હિસાબ પહેલેથી જ ₹0 છે!'); return; }
+
+      if (confirm(`શું ${currentFriendName} નો પૂરેપૂરો હિસાબ ચૂકતે કરવો છે?`)) {
+        if (net > 0) {
+          appData.availableBalance += net;
+          appData.friendsKhata[currentFriendName].push({
+            id: Date.now(),
+            type: 'TO_PAY',
+            desc: 'પૂરા ચૂકતે (હિસાબ ક્લિયર)',
+            amount: net,
+            date: new Date().toLocaleDateString('gu-IN'),
+            timestamp: Date.now()
+          });
+        } else {
+          appData.availableBalance -= Math.abs(net);
+          appData.friendsKhata[currentFriendName].push({
+            id: Date.now(),
+            type: 'TO_RECEIVE',
+            desc: 'પૂરા ચૂકતે (મેં હિસાબ ચૂકવ્યો)',
+            amount: Math.abs(net),
+            date: new Date().toLocaleDateString('gu-IN'),
+            timestamp: Date.now()
+          });
+        }
+        saveData();
+        renderFriendModalContent();
+        alert('હિસાબ સંપૂર્ણપણે ₹0 થઈ ગયો!');
+      }
+    }
+
+    function openManualAddModal(isPersonalOnly = false) {
+      document.getElementById('manualDesc').value = '';
+      document.getElementById('manualAmount').value = '';
+      document.getElementById('manualFriendName').value = '';
+      if (isPersonalOnly) {
+        document.getElementById('manualType').value = 'PERSONAL';
+      }
+      toggleManualFriendInput();
+      openModal('modalManualAdd');
+    }
+
+    function toggleManualFriendInput() {
+      const type = document.getElementById('manualType').value;
+      const box = document.getElementById('manualFriendBox');
+      if (type === 'PERSONAL') box.classList.add('hidden');
+      else box.classList.remove('hidden');
+    }
+
+    function submitManualExpense() {
+      const desc = document.getElementById('manualDesc').value.trim() || 'નાસ્તો/ખર્ચ';
+      const amount = parseFloat(document.getElementById('manualAmount').value);
+      const type = document.getElementById('manualType').value;
+      const friendName = document.getElementById('manualFriendName').value.trim();
+
+      if (!amount || amount <= 0) { alert('સાચી રકમ નાખો'); return; }
+
+      const dateStr = new Date().toLocaleDateString('gu-IN', { month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' });
+
+      if (type === 'PERSONAL') {
+        appData.availableBalance -= amount;
+        appData.personalExpenses.unshift({
+          id: Date.now(),
+          desc: desc,
+          amount: amount,
+          date: dateStr,
+          timestamp: Date.now()
+        });
+      } else {
+        if (!friendName) { alert('મિત્રનું નામ લખો'); return; }
+        if (!appData.friendsKhata[friendName]) appData.friendsKhata[friendName] = [];
+
+        if (type === 'FRIEND_LEVAN') {
+          appData.availableBalance -= amount;
+          appData.friendsKhata[friendName].push({
+            id: Date.now(),
+            type: 'TO_RECEIVE',
+            desc: desc,
+            amount: amount,
+            date: dateStr,
+            timestamp: Date.now()
+          });
+        } else {
+          appData.friendsKhata[friendName].push({
+            id: Date.now(),
+            type: 'TO_PAY',
+            desc: desc,
+            amount: amount,
+            date: dateStr,
+            timestamp: Date.now()
+          });
+        }
+      }
+
+      saveData();
+      closeModal('modalManualAdd');
+    }
+
+    let pressTimer = null;
+    const logoEl = document.getElementById('logoTitle');
+
+    function startLongPress() {
+      pressTimer = setTimeout(() => {
+        openSecretVaultModal();
+      }, 3000);
+    }
+    function cancelLongPress() {
+      if (pressTimer) clearTimeout(pressTimer);
+    }
+
+    logoEl.addEventListener('touchstart', startLongPress);
+    logoEl.addEventListener('touchend', cancelLongPress);
+    logoEl.addEventListener('mousedown', startLongPress);
+    logoEl.addEventListener('mouseup', cancelLongPress);
+
+    function openSecretVaultModal() {
+      document.getElementById('vaultPinInput').value = '';
+      document.getElementById('vaultPinSection').classList.remove('hidden');
+      document.getElementById('vaultMainSection').classList.add('hidden');
+      openModal('modalSecretVault');
+    }
+
+    function verifyVaultPin() {
+      const pin = document.getElementById('vaultPinInput').value;
+      if (pin === (appData.pin || '1234')) {
+        document.getElementById('vaultPinSection').classList.add('hidden');
+        document.getElementById('vaultMainSection').classList.remove('hidden');
+        document.getElementById('vaultBalanceDisplay').innerText = `₹${appData.secretBalance || 0}`;
+      } else {
+        alert('ખોટો PIN! ફરી પ્રયાસ કરો.');
+      }
+    }
+
+    function vaultDeposit() {
+      const amt = parseFloat(document.getElementById('vaultAmountInput').value);
+      if (!amt || amt <= 0) return;
+      if (amt > appData.availableBalance) {
+        alert('તમારા હાજર બેલેન્સ કરતા વધુ રકમ છુપાવી ન શકાય!');
+        return;
+      }
+      appData.availableBalance -= amt;
+      appData.secretBalance = (appData.secretBalance || 0) + amt;
+      document.getElementById('vaultAmountInput').value = '';
+      document.getElementById('vaultBalanceDisplay').innerText = `₹${appData.secretBalance}`;
+      saveData();
+      alert(`₹${amt} ગુપ્ત તિજોરીમાં છુપાવી દીધા! મેઈન સ્ક્રીન પરથી બાદ થઈ ગયા.`);
+    }
+
+    function vaultWithdraw() {
+      const amt = parseFloat(document.getElementById('vaultAmountInput').value);
+      if (!amt || amt <= 0) return;
+      if (amt > (appData.secretBalance || 0)) {
+        alert('તિજોરીમાં આટલા રૂપિયા નથી!');
+        return;
+      }
+      appData.secretBalance -= amt;
+      appData.availableBalance += amt;
+      document.getElementById('vaultAmountInput').value = '';
+      document.getElementById('vaultBalanceDisplay').innerText = `₹${appData.secretBalance}`;
+      saveData();
+      alert(`₹${amt} તિજોરીમાંથી કાઢીને મેઈન બેલેન્સમાં ઉમેર્યા!`);
+    }
+
+    let pendingAiParsedData = null;
+
+    async function processAiEntry() {
+      const text = document.getElementById('aiInputText').value.trim();
+      if (!text) { alert('કંઈક લખો તો ખરા!'); return; }
+
+      const btn = document.getElementById('btnAiProcess');
+      btn.innerText = 'પ્રોસેસ થઈ રહ્યું છે... ⏳';
+      btn.disabled = true;
+
+      try {
+        let result = null;
+        if (appData.apiKey && appData.apiKey.trim().length > 10) {
+          result = await callGeminiApi(text, appData.apiKey);
+        } else {
+          result = offlineGujaratiParser(text);
+        }
+
+        if (result) {
+          pendingAiParsedData = result;
+          renderAiResultCard(result);
+        } else {
+          alert('AI વાક્ય સમજી શક્યું નહીં. સાદી રીતે ફરી લખો.');
+        }
+      } catch(err) {
+        alert('એરર આવી: ' + err.message);
+      } finally {
+        btn.innerText = '🚀 હિસાબ સમજીને એન્ટ્રી પાડો';
+        btn.disabled = false;
+      }
+    }
+
+    function offlineGujaratiParser(text) {
+      const numbers = text.match(/\d+/g);
+      const totalAmount = numbers ? parseInt(numbers[0]) : 0;
+      
+      const knownFriends = ['ક્રિશ', 'રાજ', 'દર્શન', 'krish', 'raj', 'darshan'];
+      let foundFriends = [];
+      knownFriends.forEach(f => {
+        if (text.toLowerCase().includes(f.toLowerCase())) {
+          foundFriends.push(f.charAt(0).toUpperCase() + f.slice(1));
+        }
+      });
+
+      let desc = 'નાસ્તો/ખર્ચ';
+      ['ખાવસા', 'ચા', 'નાસ્તો', 'રિક્ષા', 'ઝેરોક્ષ', 'દૂધ', 'પાર્ટી'].forEach(item => {
+        if (text.includes(item)) desc = item;
+      });
+
+      if (foundFriends.length === 0) {
+        return {
+          desc: desc,
+          totalAmount: totalAmount,
+          myShare: totalAmount,
+          splits: []
+        };
+      }
+
+      const totalPeople = foundFriends.length + 1;
+      const perHead = Math.round(totalAmount / totalPeople);
+
+      return {
+        desc: desc,
+        totalAmount: totalAmount,
+        myShare: perHead,
+        splits: foundFriends.map(fn => ({ friendName: fn, amount: perHead, type: 'TO_RECEIVE' }))
+      };
+    }
+
+    function renderAiResultCard(data) {
+      const card = document.getElementById('aiResultCard');
+      const box = document.getElementById('aiResultContent');
+      card.classList.remove('hidden');
+
+      let splitsHtml = '';
+      if (data.splits && data.splits.length > 0) {
+        splitsHtml = data.splits.map(s => `<div>• <strong>${s.friendName}</strong> પાસેથી લેવાના: <span class="text-emerald-400 font-bold">₹${s.amount}</span></div>`).join('');
+      } else {
+        splitsHtml = `<div>• ફક્ત અંગત ખર્ચ છે (કોઈ મિત્ર નથી)</div>`;
+      }
+
+      box.innerHTML = `
+        <div>📌 ખર્ચ: <strong>${data.desc}</strong> (કુલ: ₹${data.totalAmount})</div>
+        <div>🙋 તમારો અંગત હિસ્સો: <strong class="text-orange-400">₹${data.myShare}</strong></div>
+        <div class="pt-1 border-t border-gray-800 text-[11px]">${splitsHtml}</div>
+      `;
+    }
+
+    function confirmAiEntry() {
+      if (!pendingAiParsedData) return;
+      const d = pendingAiParsedData;
+      const dateStr = new Date().toLocaleDateString('gu-IN', { month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' });
+
+      appData.availableBalance -= d.totalAmount;
+
+      appData.personalExpenses.unshift({
+        id: Date.now(),
+        desc: d.desc,
+        amount: d.myShare,
+        date: dateStr,
+        timestamp: Date.now()
+      });
+
+      if (d.splits && d.splits.length > 0) {
+        d.splits.forEach((sp, i) => {
+          if (!appData.friendsKhata[sp.friendName]) appData.friendsKhata[sp.friendName] = [];
+          appData.friendsKhata[sp.friendName].push({
+            id: Date.now() + i + 1,
+            type: sp.type,
+            desc: d.desc,
+            amount: sp.amount,
+            date: dateStr,
+            timestamp: Date.now()
+          });
+        });
+      }
+
+      saveData();
+      pendingAiParsedData = null;
+      document.getElementById('aiInputText').value = '';
+      document.getElementById('aiResultCard').classList.add('hidden');
+      switchTab('dashboard');
+      alert('✓ હિસાબ સફળતાપૂર્વક જોડાઈ ગયો!');
+    }
+
+    async function callGeminiApi(promptText, apiKey) {
+      const url = `https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=${apiKey}`;
+      const systemInstruction = `Extract expense JSON: { "desc": string, "totalAmount": number, "myShare": number, "splits": [ { "friendName": string, "amount": number, "type": "TO_RECEIVE" } ] }`;
+      
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          contents: [{ parts: [{ text: `${systemInstruction}\nUser message: ${promptText}` }] }]
+        })
+      });
+      const data = await res.json();
+      const raw = data.candidates[0].content.parts[0].text;
+      const cleanJson = raw.replace(/```json/g, '').replace(/```/g, '').trim();
+      return JSON.parse(cleanJson);
+    }
+
+    function saveProfileSettings() {
+      appData.userName = document.getElementById('settingUserName').value.trim() || 'પ્રિન્સ';
+      appData.pin = document.getElementById('settingUserPin').value.trim() || '1234';
+      appData.apiKey = document.getElementById('settingApiKey').value.trim();
+      saveData();
+      alert('પ્રોફાઇલ સેટિંગ્સ સેવ થઈ ગઈ!');
+    }
+
+    function resetAllAppData() {
+      if (confirm('શું સાચે જ બધો ડેટા ડીલીટ કરવો છે? આ પાછો નહીં મળે!')) {
+        localStorage.removeItem(STORAGE_KEY);
+        location.reload();
+      }
+    }
+
+    window.onload = () => {
+      loadData();
+      document.getElementById('settingUserName').value = appData.userName || '';
+      document.getElementById('settingUserPin').value = appData.pin || '1234';
+      document.getElementById('settingApiKey').value = appData.apiKey || '';
+      renderDashboard();
+    };
+  </script>
+</body>
+</html>
