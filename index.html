@@ -1,9 +1,9 @@
 <!DOCTYPE html>
-<html lang="gu">
+<html lang="en">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Track - Smart Expense & Khata</title>
+  <title>Track - Smart Expense & Ledger</title>
   <link rel="icon" type="image/png" href="logo.png">
   <link rel="apple-touch-icon" href="logo.png">
   <!-- Tailwind CSS CDN -->
@@ -31,14 +31,13 @@
         <img src="logo.png" onerror="this.style.display='none'; document.getElementById('fallbackIcon').classList.remove('hidden')" class="w-8 h-8 rounded-xl object-cover border border-orange-500/40 shadow" alt="Track Logo" />
         <span id="fallbackIcon" class="hidden text-2xl">💰</span>
         <div>
-          <h1 class="text-lg font-bold text-orange-400 flex items-center gap-1.5 leading-none">
-            <span id="appHeaderName">Track</span>
+          <h1 class="text-xl font-black text-orange-400 tracking-tight leading-none">
+            Track
           </h1>
-          <p class="text-[9px] text-gray-400 mt-0.5">લોગો પર 3 સેકન્ડ દબાવો (ગુપ્ત તિજોરી)</p>
         </div>
       </div>
       <div class="flex items-center gap-2">
-        <span id="userBadge" class="bg-gray-800 text-orange-300 text-xs px-2.5 py-1 rounded-full font-medium border border-gray-700">યુઝર</span>
+        <span id="userBadge" class="bg-gray-800 text-orange-300 text-xs px-3 py-1 rounded-full font-medium border border-gray-700">User</span>
       </div>
     </header>
 
@@ -84,14 +83,14 @@
 
         <!-- FRIENDS KHATA LIST -->
         <div id="friendsListContainer" class="space-y-2.5">
-          <!-- Populated dynamically -->
+          <!-- Dynamic friend cards -->
         </div>
 
         <!-- EMPTY STATE -->
         <div id="emptyFriendsPlaceholder" class="text-center py-12 text-gray-500 text-xs hidden space-y-2">
           <span class="text-3xl block">🤝</span>
           <p class="font-semibold text-gray-400">હજી કોઈ મિત્રનું ખાતું નથી.</p>
-          <p class="text-[11px]">નવો ખર્ચ ઉમેરવા માટે ઉપરનું '+ નવો ખર્ચ' અથવા 'AI ચેટ' વાપરો!</p>
+          <p class="text-[11px]">નવો ખર્ચ ઉમેરવા માટે '+ નવો ખર્ચ ઉમેરો' અથવા 'AI ચેટ' વાપરો!</p>
         </div>
 
       </section>
@@ -104,7 +103,7 @@
             <h2 class="text-sm font-bold text-orange-400">AI સ્માર્ટ એન્ટ્રી (ગુજરાતી / Gujlish)</h2>
           </div>
           <p class="text-xs text-gray-400 mb-3">
-            સીધું કુદરતી ભાષામાં લખો. AI આપોઆપ મિત્રો, રકમ અને ખર્ચનો પ્રકાર અલગ પાડી દેશે!
+            સીધું સામાન્ય બોલચાલમાં લખો. AI આપોઆપ મિત્રો, રકમ અને ખર્ચનો પ્રકાર અલગ પાડી દેશે!
           </p>
           <div class="space-y-1.5 text-[11px] text-gray-400 bg-gray-950 p-2.5 rounded-xl border border-gray-800/80 mb-3">
             <p class="text-gray-300 font-semibold">ઉદાહરણો:</p>
@@ -113,7 +112,7 @@
             <p>• "આજે રિક્ષા ભાડું ૨૦ રોકડા વાપર્યા"</p>
           </div>
 
-          <textarea id="aiInputText" rows="3" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-orange-500" placeholder="અહીં ગુજરાતીમાં લખો..."></textarea>
+          <textarea id="aiInputText" rows="3" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-orange-500" placeholder="અહીં લખો..."></textarea>
 
           <button id="btnAiProcess" onclick="processAiEntry()" class="w-full mt-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 active:scale-95 transition-all shadow">
             <span>🚀 હિસાબ સમજીને એન્ટ્રી પાડો</span>
@@ -129,35 +128,32 @@
         </div>
       </section>
 
-      <!-- ================= 3. PROFILE & SETTINGS TAB ================= -->
+      <!-- ================= 3. PROFILE & SETTINGS TAB (CLEAN ENGLISH) ================= -->
       <section id="tab-profile" class="hidden space-y-4 text-xs">
         <div class="bg-gray-900 border border-gray-800 rounded-2xl p-4 space-y-3">
-          <h2 class="text-sm font-bold text-white mb-2">પ્રોફાઇલ સેટિંગ્સ</h2>
+          <h2 class="text-sm font-bold text-white mb-2">Profile Settings</h2>
           <div>
-            <label class="block text-gray-400 mb-1">તમારું નામ (User Name):</label>
-            <input type="text" id="settingUserName" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2.5 text-white" />
+            <label class="block text-gray-400 mb-1">Your Name:</label>
+            <input type="text" id="settingUserName" placeholder="Name" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2.5 text-white" />
           </div>
           <div>
-            <label class="block text-gray-400 mb-1">ગુપ્ત તિજોરીનો PIN (4 આંકડા):</label>
-            <input type="password" maxlength="4" id="settingUserPin" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2.5 text-white" />
+            <label class="block text-gray-400 mb-1">Google Gemini API Key (Optional):</label>
+            <input type="password" id="settingApiKey" placeholder="Enter API Key from AI Studio" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2.5 text-white" />
           </div>
-          <div>
-            <label class="block text-gray-400 mb-1">Google Gemini API Key (વૈકલ્પિક):</label>
-            <input type="password" id="settingApiKey" placeholder="AI Studio ની API કી અહીં નાખો" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2.5 text-white" />
-          </div>
-          <button onclick="saveProfileSettings()" class="w-full bg-orange-500 py-2.5 rounded-xl font-bold text-white active:scale-95">
-            સેટિંગ્સ સેવ કરો
+          <button onclick="saveProfileSettings()" class="w-full bg-orange-500 py-2.5 rounded-xl font-bold text-white active:scale-95 transition-all shadow">
+            Save Settings
           </button>
         </div>
 
         <div class="bg-gray-900/60 border border-gray-800 rounded-2xl p-4 space-y-2 text-gray-400">
-          <h3 class="font-bold text-gray-300">મુખ્ય નિયમો:</h3>
-          <p>• <strong>૧૦ મિનિટ લોક:</strong> નવી એન્ટ્રી પડ્યા પછી ૧૦ મિનિટ સુધી જ એડિટ/ડિલીટ થશે. ત્યારબાદ ૩૦ દિવસ માટે લૉક થઈ જશે.</p>
-          <p>• <strong>ગુપ્ત તિજોરી:</strong> ઉપરના 'Track' લોગો પર ૩ સેકન્ડ દબાવી રાખવાથી ખુલે છે.</p>
+          <h3 class="font-bold text-gray-300">App Security & Rules:</h3>
+          <p>• <strong>10-Minute Grace Period:</strong> You can edit or delete an entry within 10 minutes of creating it.</p>
+          <p>• <strong>30-Day Lock:</strong> After 10 minutes, the entry is strictly locked for 30 days to prevent tampering.</p>
+          <p>• <strong>Privacy:</strong> All your financial calculations are saved safely in your own browser.</p>
         </div>
 
-        <button onclick="resetAllAppData()" class="w-full text-red-400 border border-red-900/50 hover:bg-red-950/30 py-2.5 rounded-xl font-semibold">
-          ⚠️ બધો ડેટા સાફ કરો (Factory Reset)
+        <button onclick="resetAllAppData()" class="w-full text-red-400 border border-red-900/50 hover:bg-red-950/30 py-2.5 rounded-xl font-semibold transition-all">
+          ⚠️ Reset All Data (Clear Everything)
         </button>
       </section>
 
@@ -177,42 +173,42 @@
 
       <button onclick="switchTab('profile')" id="nav-profile" class="flex flex-col items-center text-gray-400 text-[11px] font-medium transition-colors">
         <span class="text-xl">⚙️</span>
-        <span>પ્રોફાઇલ</span>
+        <span>Settings</span>
       </button>
     </nav>
 
-    <!-- ================= MODALS ================= -->
+    <!-- ================= MODALS & FULL PAGES ================= -->
 
-    <!-- MODAL 0: FIRST-TIME WELCOME & ONBOARDING -->
+    <!-- ONBOARDING MODAL (FAINT PLACEHOLDERS) -->
     <div id="modalWelcome" class="fixed inset-0 bg-black/95 z-50 hidden flex items-center justify-center p-4">
       <div class="bg-gray-900 border border-orange-500/40 w-full max-w-xs rounded-3xl p-6 space-y-4 text-center">
         <span class="text-4xl">👋</span>
-        <h2 class="text-lg font-bold text-orange-400">Track માં સ્વાગત છે!</h2>
-        <p class="text-xs text-gray-400 leading-relaxed">તમારો હોસ્ટેલ અને મિત્રો સાથેનો હિસાબ રાખવા માટે નાનકડું સેટઅપ કરો:</p>
+        <h2 class="text-lg font-bold text-orange-400">Welcome to Track</h2>
+        <p class="text-xs text-gray-400 leading-relaxed">Enter your details to initialize your personal expense ledger:</p>
         
         <div class="text-left space-y-3 pt-2 text-xs">
           <div>
-            <label class="block text-gray-400 mb-1">તમારું નામ:</label>
-            <input type="text" id="initUserName" placeholder="દા.ત. પ્રિન્સ" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2.5 text-white font-semibold" />
+            <label class="block text-gray-400 mb-1">Your Name</label>
+            <input type="text" id="initUserName" placeholder="Name" class="w-full bg-[#161a23] border border-gray-700 placeholder-gray-600 rounded-xl p-2.5 text-white font-medium focus:outline-none focus:border-orange-500" />
           </div>
           <div>
-            <label class="block text-gray-400 mb-1">શરૂઆતનું હાજર બેલેન્સ (₹):</label>
-            <input type="number" id="initBalance" placeholder="દા.ત. 1000" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2.5 text-white font-bold" />
+            <label class="block text-gray-400 mb-1">Starting Pocket Balance (₹)</label>
+            <input type="number" id="initBalance" placeholder="0" class="w-full bg-[#161a23] border border-gray-700 placeholder-gray-600 rounded-xl p-2.5 text-white font-bold focus:outline-none focus:border-orange-500" />
           </div>
         </div>
 
         <button onclick="completeOnboarding()" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold py-2.5 rounded-xl text-xs active:scale-95 shadow">
-          🚀 શરૂ કરો
+          Get Started
         </button>
       </div>
     </div>
 
-    <!-- MODAL 1: ADJUST AVAILABLE BALANCE -->
+    <!-- ADJUST AVAILABLE BALANCE MODAL -->
     <div id="modalBalance" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
       <div class="bg-gray-900 border border-gray-700 w-full max-w-xs rounded-3xl p-5 space-y-4">
         <h3 class="text-sm font-bold text-white">હાજર બેલેન્સ અપડેટ કરો</h3>
-        <p class="text-xs text-gray-400">તમારા ખિસ્સામાં કે બેંકમાં અત્યારે સાચે જ કેટલા રૂપિયા પડ્યા છે?</p>
-        <input type="number" id="inputNewBalance" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-3 text-lg font-bold text-white focus:outline-none" placeholder="દા.ત. 2000" />
+        <p class="text-xs text-gray-400">તમારા ખિસ્સામાં કે બેંકમાં અત્યારે કેટલા રૂપિયા પડ્યા છે?</p>
+        <input type="number" id="inputNewBalance" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-3 text-lg font-bold text-white focus:outline-none" placeholder="0" />
         <div class="flex gap-2">
           <button onclick="closeModal('modalBalance')" class="w-1/2 py-2.5 rounded-xl border border-gray-700 text-xs text-gray-300">કેન્સલ</button>
           <button onclick="saveAvailableBalance()" class="w-1/2 py-2.5 rounded-xl bg-orange-500 font-bold text-xs text-white">સેવ કરો</button>
@@ -220,7 +216,7 @@
       </div>
     </div>
 
-    <!-- MODAL 2: PERSONAL EXPENSE HISTORY -->
+    <!-- PERSONAL EXPENSE HISTORY MODAL -->
     <div id="modalPersonalHistory" class="fixed inset-0 bg-black/80 z-50 hidden flex flex-col justify-end p-0">
       <div class="bg-gray-900 border-t border-gray-700 w-full max-w-md mx-auto rounded-t-3xl max-h-[85vh] flex flex-col p-5 space-y-3">
         <div class="flex justify-between items-center pb-2 border-b border-gray-800">
@@ -239,7 +235,7 @@
       </div>
     </div>
 
-    <!-- MODAL 3: FRIEND DETAIL VIEW -->
+    <!-- FRIEND DETAIL VIEW MODAL -->
     <div id="modalFriendDetail" class="fixed inset-0 bg-black/80 z-50 hidden flex flex-col justify-end p-0">
       <div class="bg-gray-900 border-t border-gray-700 w-full max-w-md mx-auto rounded-t-3xl max-h-[90vh] flex flex-col p-5 space-y-4">
         
@@ -254,7 +250,7 @@
         <div class="bg-[#161a23] p-3 rounded-2xl border border-gray-800 space-y-2">
           <span class="text-[11px] font-semibold text-gray-300">ચૂકવણી / હિસાબ ક્લિયર કરો:</span>
           <div class="flex gap-2">
-            <input type="number" id="inputPartialSettle" placeholder="મળેલ રકમ (દા.ત. 200)" class="w-2/3 bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white" />
+            <input type="number" id="inputPartialSettle" placeholder="મળેલ રકમ" class="w-2/3 bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white" />
             <button onclick="submitPartialSettle()" class="w-1/3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold">
               જમા લો
             </button>
@@ -277,19 +273,19 @@
       </div>
     </div>
 
-    <!-- MODAL 4: MANUAL QUICK ADD -->
+    <!-- MANUAL QUICK ADD MODAL -->
     <div id="modalManualAdd" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
       <div class="bg-gray-900 border border-gray-700 w-full max-w-xs rounded-3xl p-5 space-y-3 text-xs">
         <h3 class="text-sm font-bold text-white">નવો ખર્ચ ઉમેરો</h3>
         
         <div>
           <label class="block text-gray-400 mb-1">શેના માટે વાપર્યા? (વિગત):</label>
-          <input type="text" id="manualDesc" placeholder="દા.ત. નાસ્તો, રિક્ષા, ખાવસા" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2.5 text-white" />
+          <input type="text" id="manualDesc" placeholder="દા.ત. નાસ્તો, રિક્ષા" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2.5 text-white" />
         </div>
 
         <div>
           <label class="block text-gray-400 mb-1">કુલ રકમ (₹):</label>
-          <input type="number" id="manualAmount" placeholder="દા.ત. 300" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2.5 text-white font-bold" />
+          <input type="number" id="manualAmount" placeholder="0" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2.5 text-white font-bold" />
         </div>
 
         <div>
@@ -303,7 +299,7 @@
 
         <div id="manualFriendBox" class="hidden">
           <label class="block text-gray-400 mb-1">મિત્રનું નામ:</label>
-          <input type="text" id="manualFriendName" placeholder="દા.ત. ક્રિશ" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2.5 text-white" />
+          <input type="text" id="manualFriendName" placeholder="મિત્રનું નામ" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2.5 text-white" />
         </div>
 
         <div class="flex gap-2 pt-2">
@@ -313,54 +309,115 @@
       </div>
     </div>
 
-    <!-- MODAL 5: SECRET SAVINGS VAULT -->
-    <div id="modalSecretVault" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center p-4">
-      <div class="bg-gray-900 border border-amber-600/50 w-full max-w-xs rounded-3xl p-5 space-y-4 text-xs">
+    <!-- ================= FULL SCREEN SECRET VAULT PAGE ================= -->
+    <div id="modalSecretVault" class="fixed inset-0 bg-[#0d0f12] z-50 hidden flex flex-col w-full h-full max-w-md mx-auto">
+      
+      <!-- 1. VAULT PIN ENTRY OVERLAY -->
+      <div id="vaultPinSection" class="flex-1 flex flex-col justify-center items-center p-6 text-center">
+        <div class="w-16 h-16 rounded-3xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-3xl mb-4">
+          🔐
+        </div>
+        <h2 class="text-xl font-extrabold text-amber-400 tracking-wide">Secret Vault</h2>
+        <p class="text-xs text-gray-400 mt-1 mb-6">Enter your 4-digit PIN to access private savings</p>
         
-        <div id="vaultPinSection" class="space-y-3 text-center">
-          <span class="text-3xl">🤫</span>
-          <h3 class="text-sm font-bold text-amber-400">ગુપ્ત તિજોરી</h3>
-          <p class="text-[11px] text-gray-400">પ્રવેશવા માટે 4 આંકડાનો PIN નાખો</p>
-          <input type="password" maxlength="4" id="vaultPinInput" class="w-32 mx-auto text-center tracking-widest text-lg font-bold bg-[#161a23] border border-gray-700 rounded-xl p-2 text-white" placeholder="••••" />
-          <div class="flex gap-2 pt-2">
-            <button onclick="closeModal('modalSecretVault')" class="w-1/2 py-2 rounded-xl border border-gray-700 text-gray-400">બંધ કરો</button>
-            <button onclick="verifyVaultPin()" class="w-1/2 py-2 rounded-xl bg-amber-600 font-bold text-white">અંદર જાઓ</button>
+        <input type="password" maxlength="4" id="vaultPinInput" class="w-36 text-center tracking-[0.5em] text-2xl font-black bg-gray-900 border border-gray-700 rounded-2xl p-3 text-white focus:outline-none focus:border-amber-500 mb-6 shadow-inner" placeholder="••••" />
+        
+        <div class="flex gap-3 w-full max-w-xs">
+          <button onclick="closeSecretVault()" class="w-1/2 py-3 rounded-2xl border border-gray-700 text-xs font-semibold text-gray-400 active:scale-95">Cancel</button>
+          <button onclick="verifyVaultPin()" class="w-1/2 py-3 rounded-2xl bg-amber-600 font-bold text-xs text-white active:scale-95 shadow-lg shadow-amber-900/30">Unlock</button>
+        </div>
+      </div>
+
+      <!-- 2. FULL SCREEN VAULT DASHBOARD -->
+      <div id="vaultMainSection" class="hidden flex-1 flex flex-col h-full overflow-hidden">
+        
+        <!-- Vault Header -->
+        <div class="p-4 border-b border-gray-800 flex justify-between items-center bg-[#161a23]">
+          <div class="flex items-center gap-2">
+            <span class="text-xl">🤫</span>
+            <span class="font-extrabold text-amber-400 text-sm">Secret Savings Vault</span>
+          </div>
+          <div class="flex items-center gap-2">
+            <button onclick="openChangePinModal()" class="text-[11px] text-gray-400 bg-gray-800 hover:text-white px-2.5 py-1 rounded-xl border border-gray-700">
+              🔑 Change PIN
+            </button>
+            <button onclick="closeSecretVault()" class="text-gray-400 text-lg px-2">✕</button>
           </div>
         </div>
 
-        <div id="vaultMainSection" class="hidden space-y-4">
-          <div class="text-center">
-            <span class="text-gray-400 text-[11px]">તમારી છુપી બચત:</span>
-            <div id="vaultBalanceDisplay" class="text-3xl font-extrabold text-amber-400">₹0</div>
-            <p class="text-[10px] text-gray-500">આ રકમ મેઈન સ્ક્રીન પર કોઈનેય નહીં દેખાય!</p>
+        <!-- Vault Content (Scrollable) -->
+        <div class="flex-1 p-4 overflow-y-auto custom-scroll space-y-4">
+          
+          <!-- Big Vault Balance Card -->
+          <div class="bg-gradient-to-br from-amber-700 via-amber-800 to-amber-950 rounded-3xl p-6 text-center border border-amber-600/40 shadow-xl relative overflow-hidden">
+            <span class="text-[11px] uppercase tracking-wider text-amber-200 font-medium">તમારી છુપી બચત (Hidden Balance)</span>
+            <div id="vaultBalanceDisplay" class="text-4xl font-black text-amber-300 my-2">₹0</div>
+            <p class="text-[10px] text-amber-200/70">આ રકમ બહારની મેઈન સ્ક્રીન પર ક્યાંય દેખાશે નહીં.</p>
           </div>
 
-          <div class="space-y-2 pt-2 border-t border-gray-800">
-            <label class="block text-gray-300 font-semibold">રૂપિયા છુપાવો / બહાર કાઢો:</label>
-            <input type="number" id="vaultAmountInput" placeholder="રકમ નાખો" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2 text-white font-bold" />
-            <div class="flex gap-2">
-              <button onclick="vaultDeposit()" class="w-1/2 bg-amber-600 py-2 rounded-xl text-white font-bold">
-                ↓ છુપાવો
+          <!-- Deposit & Withdraw Form -->
+          <div class="bg-[#161a23] p-4 rounded-2xl border border-gray-800 space-y-3">
+            <label class="block text-xs font-semibold text-gray-300">રૂપિયા છુપાવો અથવા બહાર કાઢો:</label>
+            <input type="number" id="vaultAmountInput" placeholder="0" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-sm text-white font-bold focus:outline-none focus:border-amber-500" />
+            <div class="flex gap-2.5">
+              <button onclick="vaultDeposit()" class="w-1/2 bg-amber-600 hover:bg-amber-500 py-2.5 rounded-xl text-white font-bold text-xs active:scale-95 shadow">
+                ↓ છુપાવો (Deposit)
               </button>
-              <button onclick="vaultWithdraw()" class="w-1/2 bg-emerald-600 py-2 rounded-xl text-white font-bold">
-                ↑ બહાર કાઢો
+              <button onclick="vaultWithdraw()" class="w-1/2 bg-emerald-600 hover:bg-emerald-500 py-2.5 rounded-xl text-white font-bold text-xs active:scale-95 shadow">
+                ↑ બહાર કાઢો (Withdraw)
               </button>
             </div>
           </div>
 
-          <button onclick="closeModal('modalSecretVault')" class="w-full text-center text-gray-400 py-1">
-            તિજોરી લોક કરીને બહાર નીકળો
+          <!-- Vault Transaction History -->
+          <div class="space-y-2 pt-1">
+            <div class="flex justify-between items-center">
+              <h4 class="text-xs font-bold text-gray-300 uppercase tracking-wider">તિજોરી હિસ્ટ્રી (Vault History)</h4>
+              <span class="text-[10px] text-gray-500" id="vaultHistoryCount">0 વ્યવહારો</span>
+            </div>
+            
+            <div id="vaultHistoryList" class="space-y-2">
+              <!-- Dynamic Vault History -->
+            </div>
+          </div>
+
+        </div>
+
+        <!-- Lock Vault Bottom Button -->
+        <div class="p-3 border-t border-gray-800 bg-[#161a23]">
+          <button onclick="closeSecretVault()" class="w-full bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 active:scale-95">
+            🔒 Lock Vault & Exit
           </button>
         </div>
 
       </div>
+
+      <!-- CHANGE PIN SUB-MODAL -->
+      <div id="modalChangePin" class="fixed inset-0 bg-black/80 z-60 hidden flex items-center justify-center p-4">
+        <div class="bg-gray-900 border border-gray-700 w-full max-w-xs rounded-3xl p-5 space-y-3 text-xs">
+          <h3 class="text-sm font-bold text-white">Change Secret PIN</h3>
+          <div>
+            <label class="block text-gray-400 mb-1">Old PIN:</label>
+            <input type="password" maxlength="4" id="inputOldPin" placeholder="••••" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2 text-white text-center font-bold" />
+          </div>
+          <div>
+            <label class="block text-gray-400 mb-1">New 4-digit PIN:</label>
+            <input type="password" maxlength="4" id="inputNewPin" placeholder="••••" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2 text-white text-center font-bold" />
+          </div>
+          <div class="flex gap-2 pt-2">
+            <button onclick="closeChangePinModal()" class="w-1/2 py-2 rounded-xl border border-gray-700 text-gray-300">Cancel</button>
+            <button onclick="saveNewPin()" class="w-1/2 py-2 rounded-xl bg-amber-600 font-bold text-white">Update PIN</button>
+          </div>
+        </div>
+      </div>
+
     </div>
 
   </div>
 
   <!-- JAVASCRIPT LOGIC -->
   <script>
-    const STORAGE_KEY = 'track_hisab_app_clean_v2';
+    const STORAGE_KEY = 'track_hisab_app_clean_v3';
 
     let appData = {
       userName: '',
@@ -368,6 +425,7 @@
       apiKey: '',
       availableBalance: 0,
       secretBalance: 0,
+      vaultHistory: [],
       personalExpenses: [],
       friendsKhata: {}
     };
@@ -375,7 +433,10 @@
     function loadData() {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
-        try { appData = JSON.parse(saved); } catch(e) {}
+        try { 
+          appData = JSON.parse(saved); 
+          if (!appData.vaultHistory) appData.vaultHistory = [];
+        } catch(e) {}
       } else {
         openModal('modalWelcome');
       }
@@ -389,7 +450,7 @@
     function completeOnboarding() {
       const name = document.getElementById('initUserName').value.trim();
       const bal = parseFloat(document.getElementById('initBalance').value);
-      if (!name) { alert('કૃપા કરીને તમારું નામ લખો!'); return; }
+      if (!name) { alert('Please enter your name'); return; }
       
       appData.userName = name;
       appData.availableBalance = isNaN(bal) ? 0 : bal;
@@ -412,7 +473,7 @@
     function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
     function renderDashboard() {
-      document.getElementById('userBadge').innerText = appData.userName || 'યુઝર';
+      document.getElementById('userBadge').innerText = appData.userName || 'User';
       document.getElementById('mainAvailableBal').innerText = `₹${appData.availableBalance}`;
 
       let totalToReceive = 0;
@@ -535,7 +596,7 @@
 
       if (diffMs <= tenMinutesMs) {
         const remainingMin = Math.ceil((tenMinutesMs - diffMs) / 60000);
-        return { canDelete: true, label: `⏱️ ${remainingMin} મિનિટમાં લૉક થશે` };
+        return { canDelete: true, label: `⏱️️ ${remainingMin} મિનિટમાં લૉક થશે` };
       } else if (diffMs < thirtyDaysMs) {
         return { canDelete: false, label: '🔒 લૉક (30 દિવસ)' };
       } else {
@@ -630,7 +691,7 @@
 
     function submitPartialSettle() {
       const val = parseFloat(document.getElementById('inputPartialSettle').value);
-      if (!val || val <= 0) { alert('માન્ય રકમ નાખો'); return; }
+      if (!val || val <= 0) { alert('સાચી રકમ નાખો'); return; }
 
       appData.availableBalance += val;
       appData.friendsKhata[currentFriendName].push({
@@ -638,7 +699,7 @@
         type: 'TO_PAY',
         desc: 'અંશતઃ ચૂકવણી જમા',
         amount: val,
-        date: new Date().toLocaleDateString('gu-IN'),
+        date: new Date().toLocaleDateString('en-GB'),
         timestamp: Date.now()
       });
 
@@ -666,7 +727,7 @@
             type: 'TO_PAY',
             desc: 'પૂરા ચૂકતે (હિસાબ ક્લિયર)',
             amount: net,
-            date: new Date().toLocaleDateString('gu-IN'),
+            date: new Date().toLocaleDateString('en-GB'),
             timestamp: Date.now()
           });
         } else {
@@ -674,9 +735,9 @@
           appData.friendsKhata[currentFriendName].push({
             id: Date.now(),
             type: 'TO_RECEIVE',
-            desc: 'પૂરા ચૂકતે (મેં હિસાબ ચૂકવ્યો)',
+            desc: 'પૂરા ચૂકતે (મેં ચૂકવ્યા)',
             amount: Math.abs(net),
-            date: new Date().toLocaleDateString('gu-IN'),
+            date: new Date().toLocaleDateString('en-GB'),
             timestamp: Date.now()
           });
         }
@@ -705,14 +766,14 @@
     }
 
     function submitManualExpense() {
-      const desc = document.getElementById('manualDesc').value.trim() || 'નાસ્તો/ખર્ચ';
+      const desc = document.getElementById('manualDesc').value.trim() || 'ખર્ચ';
       const amount = parseFloat(document.getElementById('manualAmount').value);
       const type = document.getElementById('manualType').value;
       const friendName = document.getElementById('manualFriendName').value.trim();
 
       if (!amount || amount <= 0) { alert('સાચી રકમ નાખો'); return; }
 
-      const dateStr = new Date().toLocaleDateString('gu-IN', { month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' });
+      const dateStr = new Date().toLocaleDateString('en-GB', { month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' });
 
       if (type === 'PERSONAL') {
         appData.availableBalance -= amount;
@@ -753,12 +814,13 @@
       closeModal('modalManualAdd');
     }
 
+    // ================= SECRET VAULT LOGIC (FULL SCREEN & PIN PROTECTED) =================
     let pressTimer = null;
     const logoEl = document.getElementById('logoTitle');
 
     function startLongPress() {
       pressTimer = setTimeout(() => {
-        openSecretVaultModal();
+        openSecretVaultPage();
       }, 3000);
     }
     function cancelLongPress() {
@@ -770,11 +832,15 @@
     logoEl.addEventListener('mousedown', startLongPress);
     logoEl.addEventListener('mouseup', cancelLongPress);
 
-    function openSecretVaultModal() {
+    function openSecretVaultPage() {
       document.getElementById('vaultPinInput').value = '';
       document.getElementById('vaultPinSection').classList.remove('hidden');
       document.getElementById('vaultMainSection').classList.add('hidden');
-      openModal('modalSecretVault');
+      document.getElementById('modalSecretVault').classList.remove('hidden');
+    }
+
+    function closeSecretVault() {
+      document.getElementById('modalSecretVault').classList.add('hidden');
     }
 
     function verifyVaultPin() {
@@ -782,9 +848,38 @@
       if (pin === (appData.pin || '1234')) {
         document.getElementById('vaultPinSection').classList.add('hidden');
         document.getElementById('vaultMainSection').classList.remove('hidden');
-        document.getElementById('vaultBalanceDisplay').innerText = `₹${appData.secretBalance || 0}`;
+        renderVaultDashboard();
       } else {
-        alert('ખોટો PIN! ફરી પ્રયાસ કરો.');
+        alert('Invalid PIN! Access Denied.');
+      }
+    }
+
+    function renderVaultDashboard() {
+      document.getElementById('vaultBalanceDisplay').innerText = `₹${appData.secretBalance || 0}`;
+      const histList = document.getElementById('vaultHistoryList');
+      histList.innerHTML = '';
+
+      const hist = appData.vaultHistory || [];
+      document.getElementById('vaultHistoryCount').innerText = `${hist.length} વ્યવહારો`;
+
+      if (hist.length === 0) {
+        histList.innerHTML = `<div class="text-center text-gray-500 py-6 text-xs">તિજોરીમાં હજી કોઈ લેવડ-દેવડ નથી થઈ.</div>`;
+      } else {
+        hist.forEach(h => {
+          const isDep = h.type === 'DEPOSIT';
+          const item = document.createElement('div');
+          item.className = "bg-gray-900/80 p-3 rounded-xl border border-gray-800 flex justify-between items-center text-xs";
+          item.innerHTML = `
+            <div>
+              <p class="font-bold text-white">${isDep ? '↓ તિજોરીમાં છુપાવ્યા' : '↑ બહાર કાઢ્યા'}</p>
+              <p class="text-[10px] text-gray-400">${h.date}</p>
+            </div>
+            <span class="font-extrabold ${isDep ? 'text-amber-400' : 'text-emerald-400'}">
+              ${isDep ? '+' : '-'} ₹${h.amount}
+            </span>
+          `;
+          histList.appendChild(item);
+        });
       }
     }
 
@@ -797,10 +892,19 @@
       }
       appData.availableBalance -= amt;
       appData.secretBalance = (appData.secretBalance || 0) + amt;
+
+      const dateStr = new Date().toLocaleDateString('en-GB', { month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' });
+      appData.vaultHistory.unshift({
+        id: Date.now(),
+        type: 'DEPOSIT',
+        amount: amt,
+        date: dateStr
+      });
+
       document.getElementById('vaultAmountInput').value = '';
-      document.getElementById('vaultBalanceDisplay').innerText = `₹${appData.secretBalance}`;
       saveData();
-      alert(`₹${amt} ગુપ્ત તિજોરીમાં છુપાવી દીધા! મેઈન સ્ક્રીન પરથી બાદ થઈ ગયા.`);
+      renderVaultDashboard();
+      alert(`₹${amt} ગુપ્ત તિજોરીમાં છુપાવી દીધા!`);
     }
 
     function vaultWithdraw() {
@@ -812,12 +916,48 @@
       }
       appData.secretBalance -= amt;
       appData.availableBalance += amt;
+
+      const dateStr = new Date().toLocaleDateString('en-GB', { month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' });
+      appData.vaultHistory.unshift({
+        id: Date.now(),
+        type: 'WITHDRAW',
+        amount: amt,
+        date: dateStr
+      });
+
       document.getElementById('vaultAmountInput').value = '';
-      document.getElementById('vaultBalanceDisplay').innerText = `₹${appData.secretBalance}`;
       saveData();
+      renderVaultDashboard();
       alert(`₹${amt} તિજોરીમાંથી કાઢીને મેઈન બેલેન્સમાં ઉમેર્યા!`);
     }
 
+    function openChangePinModal() {
+      document.getElementById('inputOldPin').value = '';
+      document.getElementById('inputNewPin').value = '';
+      openModal('modalChangePin');
+    }
+    function closeChangePinModal() {
+      closeModal('modalChangePin');
+    }
+    function saveNewPin() {
+      const oldP = document.getElementById('inputOldPin').value;
+      const newP = document.getElementById('inputNewPin').value;
+
+      if (oldP !== (appData.pin || '1234')) {
+        alert('Current PIN is incorrect!');
+        return;
+      }
+      if (!newP || newP.length !== 4) {
+        alert('New PIN must be exactly 4 digits!');
+        return;
+      }
+      appData.pin = newP;
+      saveData();
+      closeChangePinModal();
+      alert('Secret Vault PIN updated successfully!');
+    }
+
+    // ================= AI PARSER =================
     let pendingAiParsedData = null;
 
     async function processAiEntry() {
@@ -840,10 +980,10 @@
           pendingAiParsedData = result;
           renderAiResultCard(result);
         } else {
-          alert('AI વાક્ય સમજી શક્યું નહીં. સાદી રીતે ફરી લખો.');
+          alert('AI સમજી શક્યું નહીં, ફરી લખો.');
         }
       } catch(err) {
-        alert('એરર આવી: ' + err.message);
+        alert('Error: ' + err.message);
       } finally {
         btn.innerText = '🚀 હિસાબ સમજીને એન્ટ્રી પાડો';
         btn.disabled = false;
@@ -867,7 +1007,7 @@
         }
       });
 
-      let desc = 'નાસ્તો/ખર્ચ';
+      let desc = 'ખર્ચ';
       ['ખાવસા', 'ચા', 'નાસ્તો', 'રિક્ષા', 'ઝેરોક્ષ', 'દૂધ', 'પાર્ટી'].forEach(item => {
         if (text.includes(item)) desc = item;
       });
@@ -901,12 +1041,12 @@
       if (data.splits && data.splits.length > 0) {
         splitsHtml = data.splits.map(s => `<div>• <strong>${s.friendName}</strong> પાસેથી લેવાના: <span class="text-emerald-400 font-bold">₹${s.amount}</span></div>`).join('');
       } else {
-        splitsHtml = `<div>• ફક્ત અંગત ખર્ચ છે (કોઈ મિત્ર નથી)</div>`;
+        splitsHtml = `<div>• ફક્ત અંગત ખર્ચ છે</div>`;
       }
 
       box.innerHTML = `
         <div>📌 ખર્ચ: <strong>${data.desc}</strong> (કુલ: ₹${data.totalAmount})</div>
-        <div>🙋 તમારો અંગત હિસ્સો: <strong class="text-orange-400">₹${data.myShare}</strong></div>
+        <div>🙋 અંગત હિસ્સો: <strong class="text-orange-400">₹${data.myShare}</strong></div>
         <div class="pt-1 border-t border-gray-800 text-[11px]">${splitsHtml}</div>
       `;
     }
@@ -914,7 +1054,7 @@
     function confirmAiEntry() {
       if (!pendingAiParsedData) return;
       const d = pendingAiParsedData;
-      const dateStr = new Date().toLocaleDateString('gu-IN', { month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' });
+      const dateStr = new Date().toLocaleDateString('en-GB', { month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' });
 
       appData.availableBalance -= d.totalAmount;
 
@@ -945,7 +1085,7 @@
       document.getElementById('aiInputText').value = '';
       document.getElementById('aiResultCard').classList.add('hidden');
       switchTab('dashboard');
-      alert('✓ હિસાબ સફળતાપૂર્વક જોડાઈ ગયો!');
+      alert('✓ હિસાબ સેવ થઈ ગયો!');
     }
 
     async function callGeminiApi(promptText, apiKey) {
@@ -966,15 +1106,14 @@
     }
 
     function saveProfileSettings() {
-      appData.userName = document.getElementById('settingUserName').value.trim() || 'યુઝર';
-      appData.pin = document.getElementById('settingUserPin').value.trim() || '1234';
+      appData.userName = document.getElementById('settingUserName').value.trim() || 'User';
       appData.apiKey = document.getElementById('settingApiKey').value.trim();
       saveData();
-      alert('પ્રોફાઇલ સેટિંગ્સ સેવ થઈ ગઈ!');
+      alert('Profile Settings Saved!');
     }
 
     function resetAllAppData() {
-      if (confirm('શું સાચે જ બધો ડેટા ડીલીટ કરવો છે?')) {
+      if (confirm('Are you sure you want to reset everything? This will permanently wipe all ledger data.')) {
         localStorage.removeItem(STORAGE_KEY);
         location.reload();
       }
@@ -983,7 +1122,6 @@
     window.onload = () => {
       loadData();
       document.getElementById('settingUserName').value = appData.userName || '';
-      document.getElementById('settingUserPin').value = appData.pin || '1234';
       document.getElementById('settingApiKey').value = appData.apiKey || '';
       renderDashboard();
     };
