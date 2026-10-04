@@ -4,7 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
   <title>Track - Smart Expense & Khata</title>
-  <!-- App Icon / Logo linking -->
   <link rel="icon" type="image/png" href="logo.png">
   <link rel="apple-touch-icon" href="logo.png">
   <!-- Tailwind CSS CDN -->
@@ -39,7 +38,7 @@
         </div>
       </div>
       <div class="flex items-center gap-2">
-        <span id="userBadge" class="bg-gray-800 text-orange-300 text-xs px-2.5 py-1 rounded-full font-medium border border-gray-700">પ્રિન્સ</span>
+        <span id="userBadge" class="bg-gray-800 text-orange-300 text-xs px-2.5 py-1 rounded-full font-medium border border-gray-700">યુઝર</span>
       </div>
     </header>
 
@@ -85,12 +84,14 @@
 
         <!-- FRIENDS KHATA LIST -->
         <div id="friendsListContainer" class="space-y-2.5">
-          <!-- Populated by JS -->
+          <!-- Populated dynamically -->
         </div>
 
         <!-- EMPTY STATE -->
-        <div id="emptyFriendsPlaceholder" class="text-center py-10 text-gray-500 text-xs hidden">
-          હજી કોઈ મિત્રનું ખાતું નથી. ઉપર 'નવો ખર્ચ ઉમેરો' અથવા 'AI ચેટ' માંથી હિસાબ લખો!
+        <div id="emptyFriendsPlaceholder" class="text-center py-12 text-gray-500 text-xs hidden space-y-2">
+          <span class="text-3xl block">🤝</span>
+          <p class="font-semibold text-gray-400">હજી કોઈ મિત્રનું ખાતું નથી.</p>
+          <p class="text-[11px]">નવો ખર્ચ ઉમેરવા માટે ઉપરનું '+ નવો ખર્ચ' અથવા 'AI ચેટ' વાપરો!</p>
         </div>
 
       </section>
@@ -119,7 +120,6 @@
           </button>
         </div>
 
-        <!-- AI PARSED PREVIEW / RESULT BOX -->
         <div id="aiResultCard" class="hidden bg-gray-900 border border-gray-700 rounded-2xl p-4 space-y-3">
           <h3 class="text-xs font-bold text-gray-200 uppercase">AI નું એનાલિસિસ:</h3>
           <div id="aiResultContent" class="text-xs space-y-1.5 text-gray-300"></div>
@@ -142,8 +142,8 @@
             <input type="password" maxlength="4" id="settingUserPin" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2.5 text-white" />
           </div>
           <div>
-            <label class="block text-gray-400 mb-1">Google Gemini API Key (વૈકલ્પિક - સ્માર્ટ AI માટે):</label>
-            <input type="password" id="settingApiKey" placeholder="AI Studio માંથી મળેલી કી અહીં પેસ્ટ કરો" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2.5 text-white" />
+            <label class="block text-gray-400 mb-1">Google Gemini API Key (વૈકલ્પિક):</label>
+            <input type="password" id="settingApiKey" placeholder="AI Studio ની API કી અહીં નાખો" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2.5 text-white" />
           </div>
           <button onclick="saveProfileSettings()" class="w-full bg-orange-500 py-2.5 rounded-xl font-bold text-white active:scale-95">
             સેટિંગ્સ સેવ કરો
@@ -151,8 +151,8 @@
         </div>
 
         <div class="bg-gray-900/60 border border-gray-800 rounded-2xl p-4 space-y-2 text-gray-400">
-          <h3 class="font-bold text-gray-300">કાયમી નિયમો:</h3>
-          <p>• <strong>૧૦ મિનિટ લોક:</strong> નવી એન્ટ્રી પડ્યા પછી ૧૦ મિનિટ સુધી જ એડિટ/ડિલીટ થઈ શકશે. ત્યારપછી ૩૦ દિવસ સુધી લૉક રહેશે.</p>
+          <h3 class="font-bold text-gray-300">મુખ્ય નિયમો:</h3>
+          <p>• <strong>૧૦ મિનિટ લોક:</strong> નવી એન્ટ્રી પડ્યા પછી ૧૦ મિનિટ સુધી જ એડિટ/ડિલીટ થશે. ત્યારબાદ ૩૦ દિવસ માટે લૉક થઈ જશે.</p>
           <p>• <strong>ગુપ્ત તિજોરી:</strong> ઉપરના 'Track' લોગો પર ૩ સેકન્ડ દબાવી રાખવાથી ખુલે છે.</p>
         </div>
 
@@ -163,7 +163,7 @@
 
     </main>
 
-    <!-- ================= BOTTOM NAVIGATION BAR (3 ICONS) ================= -->
+    <!-- ================= BOTTOM NAVIGATION BAR ================= -->
     <nav class="fixed bottom-0 w-full max-w-md bg-[#161a23] border-t border-gray-800 flex justify-around items-center py-2.5 z-40">
       <button onclick="switchTab('dashboard')" id="nav-dashboard" class="flex flex-col items-center text-orange-400 text-[11px] font-medium transition-colors">
         <span class="text-xl">📊</span>
@@ -183,6 +183,30 @@
 
     <!-- ================= MODALS ================= -->
 
+    <!-- MODAL 0: FIRST-TIME WELCOME & ONBOARDING -->
+    <div id="modalWelcome" class="fixed inset-0 bg-black/95 z-50 hidden flex items-center justify-center p-4">
+      <div class="bg-gray-900 border border-orange-500/40 w-full max-w-xs rounded-3xl p-6 space-y-4 text-center">
+        <span class="text-4xl">👋</span>
+        <h2 class="text-lg font-bold text-orange-400">Track માં સ્વાગત છે!</h2>
+        <p class="text-xs text-gray-400 leading-relaxed">તમારો હોસ્ટેલ અને મિત્રો સાથેનો હિસાબ રાખવા માટે નાનકડું સેટઅપ કરો:</p>
+        
+        <div class="text-left space-y-3 pt-2 text-xs">
+          <div>
+            <label class="block text-gray-400 mb-1">તમારું નામ:</label>
+            <input type="text" id="initUserName" placeholder="દા.ત. પ્રિન્સ" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2.5 text-white font-semibold" />
+          </div>
+          <div>
+            <label class="block text-gray-400 mb-1">શરૂઆતનું હાજર બેલેન્સ (₹):</label>
+            <input type="number" id="initBalance" placeholder="દા.ત. 1000" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2.5 text-white font-bold" />
+          </div>
+        </div>
+
+        <button onclick="completeOnboarding()" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold py-2.5 rounded-xl text-xs active:scale-95 shadow">
+          🚀 શરૂ કરો
+        </button>
+      </div>
+    </div>
+
     <!-- MODAL 1: ADJUST AVAILABLE BALANCE -->
     <div id="modalBalance" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
       <div class="bg-gray-900 border border-gray-700 w-full max-w-xs rounded-3xl p-5 space-y-4">
@@ -196,7 +220,7 @@
       </div>
     </div>
 
-    <!-- MODAL 2: PERSONAL EXPENSE HISTORY (OPENED BY CLICKING BIG NUMBER) -->
+    <!-- MODAL 2: PERSONAL EXPENSE HISTORY -->
     <div id="modalPersonalHistory" class="fixed inset-0 bg-black/80 z-50 hidden flex flex-col justify-end p-0">
       <div class="bg-gray-900 border-t border-gray-700 w-full max-w-md mx-auto rounded-t-3xl max-h-[85vh] flex flex-col p-5 space-y-3">
         <div class="flex justify-between items-center pb-2 border-b border-gray-800">
@@ -207,9 +231,7 @@
           <button onclick="closeModal('modalPersonalHistory')" class="text-gray-400 text-lg p-1">✕</button>
         </div>
 
-        <div id="personalExpenseList" class="flex-1 overflow-y-auto space-y-2.5 custom-scroll text-xs">
-          <!-- Populated by JS -->
-        </div>
+        <div id="personalExpenseList" class="flex-1 overflow-y-auto space-y-2.5 custom-scroll text-xs"></div>
 
         <button onclick="closeModal('modalPersonalHistory'); openManualAddModal(true)" class="w-full bg-orange-500 py-2.5 rounded-xl text-xs font-bold text-white">
           + નવો અંગત ખર્ચ ઉમેરો
@@ -217,7 +239,7 @@
       </div>
     </div>
 
-    <!-- MODAL 3: FRIEND KHATA DETAIL VIEW (WITH 2 TABS & PARTIAL SETTLE) -->
+    <!-- MODAL 3: FRIEND DETAIL VIEW -->
     <div id="modalFriendDetail" class="fixed inset-0 bg-black/80 z-50 hidden flex flex-col justify-end p-0">
       <div class="bg-gray-900 border-t border-gray-700 w-full max-w-md mx-auto rounded-t-3xl max-h-[90vh] flex flex-col p-5 space-y-4">
         
@@ -229,7 +251,6 @@
           <button onclick="closeModal('modalFriendDetail')" class="text-gray-400 text-lg p-1">✕</button>
         </div>
 
-        <!-- SETTLEMENT BOX (PARTIAL + FULL ₹0) -->
         <div class="bg-[#161a23] p-3 rounded-2xl border border-gray-800 space-y-2">
           <span class="text-[11px] font-semibold text-gray-300">ચૂકવણી / હિસાબ ક્લિયર કરો:</span>
           <div class="flex gap-2">
@@ -243,7 +264,6 @@
           </button>
         </div>
 
-        <!-- 2 TABS: LEVANA VS AAPVANA -->
         <div class="flex border-b border-gray-800 text-xs">
           <button id="btnTabLevana" onclick="switchFriendSubTab('levana')" class="w-1/2 py-2 border-b-2 border-emerald-500 font-bold text-emerald-400">
             લેવાના (To Receive)
@@ -253,11 +273,7 @@
           </button>
         </div>
 
-        <!-- TRANSACTION ITEMS -->
-        <div id="friendTransactionsList" class="flex-1 overflow-y-auto space-y-2 custom-scroll text-xs">
-          <!-- Populated by JS -->
-        </div>
-
+        <div id="friendTransactionsList" class="flex-1 overflow-y-auto space-y-2 custom-scroll text-xs"></div>
       </div>
     </div>
 
@@ -297,11 +313,10 @@
       </div>
     </div>
 
-    <!-- MODAL 5: SECRET SAVINGS VAULT (3-SEC LONG PRESS TRIGGER) -->
+    <!-- MODAL 5: SECRET SAVINGS VAULT -->
     <div id="modalSecretVault" class="fixed inset-0 bg-black/90 z-50 hidden flex items-center justify-center p-4">
       <div class="bg-gray-900 border border-amber-600/50 w-full max-w-xs rounded-3xl p-5 space-y-4 text-xs">
         
-        <!-- PIN SCREEN -->
         <div id="vaultPinSection" class="space-y-3 text-center">
           <span class="text-3xl">🤫</span>
           <h3 class="text-sm font-bold text-amber-400">ગુપ્ત તિજોરી</h3>
@@ -313,7 +328,6 @@
           </div>
         </div>
 
-        <!-- VAULT BALANCE & TRANSFER SCREEN -->
         <div id="vaultMainSection" class="hidden space-y-4">
           <div class="text-center">
             <span class="text-gray-400 text-[11px]">તમારી છુપી બચત:</span>
@@ -326,7 +340,7 @@
             <input type="number" id="vaultAmountInput" placeholder="રકમ નાખો" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2 text-white font-bold" />
             <div class="flex gap-2">
               <button onclick="vaultDeposit()" class="w-1/2 bg-amber-600 py-2 rounded-xl text-white font-bold">
-                ↓ છુપાવો (Deposit)
+                ↓ છુપાવો
               </button>
               <button onclick="vaultWithdraw()" class="w-1/2 bg-emerald-600 py-2 rounded-xl text-white font-bold">
                 ↑ બહાર કાઢો
@@ -344,41 +358,43 @@
 
   </div>
 
-  <!-- JAVASCRIPT APP LOGIC -->
+  <!-- JAVASCRIPT LOGIC -->
   <script>
-    const STORAGE_KEY = 'track_hisab_app_v1';
+    const STORAGE_KEY = 'track_hisab_app_clean_v2';
 
     let appData = {
-      userName: 'પ્રિન્સ',
+      userName: '',
       pin: '1234',
       apiKey: '',
-      availableBalance: 2000,
+      availableBalance: 0,
       secretBalance: 0,
-      personalExpenses: [
-        { id: 1, desc: 'એન્જિનિયરિંગ મટીરીયલ ઝેરોક્ષ', amount: 135, date: '04 Oct, 09:23 AM', timestamp: Date.now() - 3600000 },
-        { id: 2, desc: 'રિક્ષા ભાડું', amount: 30, date: '04 Oct, 09:23 AM', timestamp: Date.now() - 7200000 }
-      ],
-      friendsKhata: {
-        'ક્રિશ': [
-          { id: 101, type: 'TO_RECEIVE', desc: 'ખાવસા', amount: 100, date: '04 Oct, 10:00 AM', timestamp: Date.now() - 100000 },
-          { id: 102, type: 'TO_RECEIVE', desc: 'નાસ્તો', amount: 150, date: '04 Oct, 02:00 PM', timestamp: Date.now() - 50000 }
-        ],
-        'રાજ': [
-          { id: 201, type: 'TO_RECEIVE', desc: 'ખાવસા', amount: 100, date: '04 Oct, 10:00 AM', timestamp: Date.now() - 100000 }
-        ]
-      }
+      personalExpenses: [],
+      friendsKhata: {}
     };
 
     function loadData() {
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         try { appData = JSON.parse(saved); } catch(e) {}
+      } else {
+        openModal('modalWelcome');
       }
     }
 
     function saveData() {
       localStorage.setItem(STORAGE_KEY, JSON.stringify(appData));
       renderDashboard();
+    }
+
+    function completeOnboarding() {
+      const name = document.getElementById('initUserName').value.trim();
+      const bal = parseFloat(document.getElementById('initBalance').value);
+      if (!name) { alert('કૃપા કરીને તમારું નામ લખો!'); return; }
+      
+      appData.userName = name;
+      appData.availableBalance = isNaN(bal) ? 0 : bal;
+      saveData();
+      closeModal('modalWelcome');
     }
 
     function switchTab(tab) {
@@ -396,7 +412,7 @@
     function closeModal(id) { document.getElementById(id).classList.add('hidden'); }
 
     function renderDashboard() {
-      document.getElementById('userBadge').innerText = appData.userName || 'પ્રિન્સ';
+      document.getElementById('userBadge').innerText = appData.userName || 'યુઝર';
       document.getElementById('mainAvailableBal').innerText = `₹${appData.availableBalance}`;
 
       let totalToReceive = 0;
@@ -404,7 +420,7 @@
 
       const friendsContainer = document.getElementById('friendsListContainer');
       friendsContainer.innerHTML = '';
-      const friendNames = Object.keys(appData.friendsKhata);
+      const friendNames = Object.keys(appData.friendsKhata || {});
 
       if (friendNames.length === 0) {
         document.getElementById('emptyFriendsPlaceholder').classList.remove('hidden');
@@ -513,8 +529,7 @@
     }
 
     function getLockStatus(timestamp) {
-      const now = Date.now();
-      const diffMs = now - (timestamp || 0);
+      const diffMs = Date.now() - (timestamp || 0);
       const tenMinutesMs = 10 * 60 * 1000;
       const thirtyDaysMs = 30 * 24 * 60 * 60 * 1000;
 
@@ -839,11 +854,16 @@
       const numbers = text.match(/\d+/g);
       const totalAmount = numbers ? parseInt(numbers[0]) : 0;
       
-      const knownFriends = ['ક્રિશ', 'રાજ', 'દર્શન', 'krish', 'raj', 'darshan'];
+      const words = text.split(/[\s,]+/);
       let foundFriends = [];
-      knownFriends.forEach(f => {
-        if (text.toLowerCase().includes(f.toLowerCase())) {
-          foundFriends.push(f.charAt(0).toUpperCase() + f.slice(1));
+      const stopWords = ['હું', 'મેં', 'અમે', 'અને', 'તે', 'ના', 'ની', 'નું', 'ખાવા', 'ગયા', 'પીધી', 'રૂપિયા', 'થયા', 'ચૂકવ્યા', 'hu', 'me', 'ame', 'ane', 'na', 'ni', 'nu', 'khava', 'gaya', 'pidhi', 'rs', 'thaya'];
+
+      words.forEach(w => {
+        const clean = w.toLowerCase().replace(/[^a-zA-Z\u0A80-\u0AFF]/g, '');
+        if (clean.length > 2 && !stopWords.includes(clean) && isNaN(clean)) {
+          if (!foundFriends.includes(clean) && !['ખાવસા', 'નાસ્તો', 'ચા', 'રિક્ષા', 'ઝેરોક્ષ'].includes(clean)) {
+            foundFriends.push(clean.charAt(0).toUpperCase() + clean.slice(1));
+          }
         }
       });
 
@@ -946,7 +966,7 @@
     }
 
     function saveProfileSettings() {
-      appData.userName = document.getElementById('settingUserName').value.trim() || 'પ્રિન્સ';
+      appData.userName = document.getElementById('settingUserName').value.trim() || 'યુઝર';
       appData.pin = document.getElementById('settingUserPin').value.trim() || '1234';
       appData.apiKey = document.getElementById('settingApiKey').value.trim();
       saveData();
@@ -954,7 +974,7 @@
     }
 
     function resetAllAppData() {
-      if (confirm('શું સાચે જ બધો ડેટા ડીલીટ કરવો છે? આ પાછો નહીં મળે!')) {
+      if (confirm('શું સાચે જ બધો ડેટા ડીલીટ કરવો છે?')) {
         localStorage.removeItem(STORAGE_KEY);
         location.reload();
       }
