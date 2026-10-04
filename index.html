@@ -3,410 +3,468 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
-  <title>Track - Smart Expense & Ledger</title>
+  <title>Track - Modern Expense & Ledger</title>
   <link rel="icon" type="image/png" href="logo.png">
   <link rel="apple-touch-icon" href="logo.png">
+  
+  <!-- Modern Font: Plus Jakarta Sans -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+  
   <!-- Tailwind CSS CDN -->
   <script src="https://cdn.tailwindcss.com"></script>
+  
   <style>
-    body {
-      background-color: #0d0f12;
-      color: #f3f4f6;
-      font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    * {
+      font-family: 'Plus Jakarta Sans', -apple-system, sans-serif;
       -webkit-tap-highlight-color: transparent;
       user-select: none;
     }
+    body {
+      background-color: #07090e;
+      color: #f1f5f9;
+    }
     .custom-scroll::-webkit-scrollbar { display: none; }
     .custom-scroll { -ms-overflow-style: none; scrollbar-width: none; }
+    
+    .card-glass {
+      background: rgba(18, 22, 31, 0.7);
+      backdrop-filter: blur(16px);
+      -webkit-backdrop-filter: blur(16px);
+      border: 1px solid rgba(255, 255, 255, 0.07);
+    }
+    .card-glass-hover:active {
+      transform: scale(0.98);
+      background: rgba(26, 32, 44, 0.85);
+    }
+    .glow-orange {
+      box-shadow: 0 12px 32px -8px rgba(249, 115, 22, 0.35);
+    }
+    .glow-gold {
+      box-shadow: 0 12px 32px -8px rgba(234, 179, 8, 0.25);
+    }
   </style>
 </head>
-<body class="flex justify-center min-h-screen">
+<body class="flex justify-center min-h-screen bg-[#07090e]">
 
-  <!-- Main Mobile App Wrapper -->
-  <div class="w-full max-w-md bg-[#12151b] flex flex-col min-h-screen relative shadow-2xl pb-24">
+  <!-- Mobile App Wrapper -->
+  <div class="w-full max-w-md bg-[#0a0d14] flex flex-col min-h-screen relative shadow-2xl pb-24 overflow-x-hidden border-x border-white/[0.03]">
     
     <!-- TOP HEADER -->
-    <header class="p-4 flex items-center justify-between border-b border-gray-800 bg-[#161a23]/90 sticky top-0 z-30 backdrop-blur">
-      <div id="logoTitle" class="cursor-pointer active:scale-95 transition-transform select-none flex items-center gap-2.5">
-        <img src="logo.png" onerror="this.style.display='none'; document.getElementById('fallbackIcon').classList.remove('hidden')" class="w-8 h-8 rounded-xl object-cover border border-orange-500/40 shadow" alt="Track Logo" />
-        <span id="fallbackIcon" class="hidden text-2xl">💰</span>
+    <header class="p-4 flex items-center justify-between border-b border-white/[0.06] bg-[#0c1017]/80 sticky top-0 z-30 backdrop-blur-xl">
+      <div id="logoTitle" class="cursor-pointer active:scale-95 transition-transform flex items-center gap-3">
+        <div class="relative">
+          <img src="logo.png" onerror="this.style.display='none'; document.getElementById('fallbackIcon').classList.remove('hidden')" class="w-9 h-9 rounded-2xl object-cover ring-1 ring-orange-500/40 shadow-md shadow-orange-950/40" alt="Track Logo" />
+          <span id="fallbackIcon" class="hidden text-2xl">💰</span>
+        </div>
         <div>
-          <h1 class="text-xl font-black text-orange-400 tracking-tight leading-none">
+          <h1 class="text-xl font-extrabold tracking-tight bg-gradient-to-r from-orange-400 via-amber-300 to-orange-500 bg-clip-text text-transparent leading-none">
             Track
           </h1>
+          <span class="text-[9px] text-gray-500 font-semibold tracking-wider uppercase">Finance Ledger</span>
         </div>
       </div>
+
       <div class="flex items-center gap-2">
-        <span id="userBadge" class="bg-gray-800 text-orange-300 text-xs px-3 py-1 rounded-full font-medium border border-gray-700">User</span>
+        <span id="userBadge" class="bg-white/[0.05] text-orange-300 text-[11px] px-3 py-1 rounded-full font-semibold border border-white/[0.08] shadow-inner">User</span>
       </div>
     </header>
 
-    <!-- CONTENT TABS CONTAINER -->
+    <!-- CONTENT CONTAINER -->
     <main class="flex-1 p-4 overflow-y-auto custom-scroll">
 
       <!-- ================= 1. DASHBOARD TAB ================= -->
-      <section id="tab-dashboard" class="space-y-4">
+      <section id="tab-dashboard" class="space-y-5">
         
-        <!-- MAIN BALANCE CARD (AVAILABLE IN POCKET) -->
-        <div class="bg-gradient-to-br from-orange-600 to-amber-600 rounded-3xl p-5 shadow-lg shadow-orange-950/40 relative overflow-hidden">
-          <div class="flex justify-between items-start">
-            <span class="text-xs uppercase tracking-wider text-orange-100 font-semibold">હાજર બેલેન્સ (રોકડા/બેંક)</span>
-            <button onclick="openBalanceModal()" class="bg-black/30 hover:bg-black/40 text-white text-xs px-2.5 py-1 rounded-full font-semibold border border-white/20 transition-all flex items-center gap-1">
-              <span>✏️</span> એડજસ્ટ
-            </button>
-          </div>
+        <!-- LUXURY WALLET BALANCE CARD -->
+        <div class="bg-gradient-to-br from-[#f05a22] via-[#e4460d] to-[#992600] rounded-[28px] p-6 text-white relative overflow-hidden glow-orange border border-white/20">
+          
+          <!-- Subtle Card Graphic Elements -->
+          <div class="absolute -right-12 -top-12 w-44 h-44 rounded-full bg-white/10 blur-2xl pointer-events-none"></div>
+          <div class="absolute -left-10 -bottom-10 w-36 h-36 rounded-full bg-black/20 blur-xl pointer-events-none"></div>
 
-          <!-- BIG TOUCHABLE NUMBER FOR EXPENSE HISTORY -->
-          <div onclick="openPersonalHistoryModal()" class="my-3 cursor-pointer group">
-            <div class="flex items-baseline gap-1">
-              <span class="text-4xl font-extrabold tracking-tight text-white group-hover:scale-[1.02] transition-transform" id="mainAvailableBal">₹0</span>
-              <span class="text-xs text-orange-200">👆 ટચ કરો (ખર્ચ હિસ્ટ્રી)</span>
+          <div class="relative z-10">
+            <div class="flex justify-between items-center mb-2">
+              <span class="text-[11px] font-bold tracking-widest text-orange-200/90 uppercase">Available Balance</span>
+              <button onclick="openBalanceModal()" class="bg-black/25 hover:bg-black/40 active:scale-95 text-white text-[11px] px-3 py-1 rounded-full font-bold border border-white/20 backdrop-blur-md transition-all flex items-center gap-1.5 shadow-sm">
+                <span>✏️</span> Adjust
+              </button>
             </div>
-          </div>
 
-          <!-- NET FRIENDS SUMMARY (TO RECEIVE / TO PAY) -->
-          <div class="pt-3 border-t border-white/20 flex items-center justify-between text-xs">
-            <span class="text-orange-100">મિત્રો સાથે નેટ હિસાબ:</span>
-            <span id="netFriendsBadge" class="font-bold px-2 py-0.5 rounded-full text-xs bg-black/30 text-white">
-              ₹0
-            </span>
+            <!-- BIG INTERACTIVE BALANCE DISPLAY -->
+            <div onclick="openPersonalHistoryModal()" class="my-4 cursor-pointer group active:scale-[0.99] transition-transform">
+              <div class="flex items-baseline gap-2">
+                <span class="text-4xl sm:text-5xl font-extrabold tracking-tight text-white drop-shadow-sm" id="mainAvailableBal">₹0</span>
+              </div>
+              <p class="text-[11px] text-orange-200/80 font-medium mt-1 flex items-center gap-1">
+                <span>👆</span> Tap for Expense History
+              </p>
+            </div>
+
+            <!-- NET WITH FRIENDS STAT BAR -->
+            <div class="pt-3.5 border-t border-white/20 flex items-center justify-between text-xs font-medium">
+              <span class="text-orange-100">Net with Friends:</span>
+              <span id="netFriendsBadge" class="font-bold px-2.5 py-0.5 rounded-full text-xs bg-black/30 border border-white/15 text-white">
+                ₹0
+              </span>
+            </div>
           </div>
         </div>
 
         <!-- QUICK ACTION BAR -->
-        <div class="flex items-center justify-between gap-2 pt-1">
-          <h2 class="text-sm font-semibold text-gray-300">મિત્રોના ખાતા</h2>
-          <button onclick="openManualAddModal()" class="bg-orange-500 hover:bg-orange-600 active:scale-95 text-white text-xs font-semibold px-3 py-1.5 rounded-xl flex items-center gap-1 shadow">
-            <span>+</span> નવો ખર્ચ ઉમેરો
+        <div class="flex items-center justify-between pt-1">
+          <div>
+            <h2 class="text-sm font-bold text-slate-200 tracking-wide">Friends Ledger</h2>
+            <p class="text-[10px] text-slate-500 font-medium">Split accounts & balances</p>
+          </div>
+          <button onclick="openManualAddModal()" class="bg-gradient-to-r from-orange-500 to-amber-500 hover:brightness-110 active:scale-95 text-white text-xs font-bold px-3.5 py-2 rounded-xl flex items-center gap-1.5 shadow-md shadow-orange-950/50 transition-all">
+            <span>+</span> Add Expense
           </button>
         </div>
 
         <!-- FRIENDS KHATA LIST -->
-        <div id="friendsListContainer" class="space-y-2.5">
-          <!-- Dynamic friend cards -->
-        </div>
+        <div id="friendsListContainer" class="space-y-3"></div>
 
         <!-- EMPTY STATE -->
-        <div id="emptyFriendsPlaceholder" class="text-center py-12 text-gray-500 text-xs hidden space-y-2">
-          <span class="text-3xl block">🤝</span>
-          <p class="font-semibold text-gray-400">હજી કોઈ મિત્રનું ખાતું નથી.</p>
-          <p class="text-[11px]">નવો ખર્ચ ઉમેરવા માટે '+ નવો ખર્ચ ઉમેરો' અથવા 'AI ચેટ' વાપરો!</p>
+        <div id="emptyFriendsPlaceholder" class="text-center py-14 text-slate-500 text-xs hidden space-y-2.5">
+          <div class="w-14 h-14 mx-auto rounded-3xl bg-white/[0.03] border border-white/[0.06] flex items-center justify-center text-2xl shadow-inner">
+            🤝
+          </div>
+          <p class="font-bold text-slate-400 text-sm">No friend accounts yet</p>
+          <p class="text-[11px] text-slate-500 max-w-xs mx-auto">Tap '+ Add Expense' or use 'AI Chat' to record shared spends.</p>
         </div>
 
       </section>
 
       <!-- ================= 2. AI CHAT TAB ================= -->
       <section id="tab-ai" class="hidden space-y-4">
-        <div class="bg-gray-900 border border-gray-800 rounded-2xl p-4">
-          <div class="flex items-center gap-2 mb-2">
-            <span class="text-lg">✨</span>
-            <h2 class="text-sm font-bold text-orange-400">AI સ્માર્ટ એન્ટ્રી (ગુજરાતી / Gujlish)</h2>
+        <div class="card-glass rounded-3xl p-5 border border-white/[0.08] shadow-xl">
+          <div class="flex items-center gap-2.5 mb-2">
+            <div class="w-8 h-8 rounded-xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-orange-400">
+              ✨
+            </div>
+            <div>
+              <h2 class="text-sm font-extrabold text-white">AI Smart Ledger</h2>
+              <p class="text-[10px] text-slate-400">Understands Gujarati, English & Gujlish</p>
+            </div>
           </div>
-          <p class="text-xs text-gray-400 mb-3">
-            સીધું સામાન્ય બોલચાલમાં લખો. AI આપોઆપ મિત્રો, રકમ અને ખર્ચનો પ્રકાર અલગ પાડી દેશે!
-          </p>
-          <div class="space-y-1.5 text-[11px] text-gray-400 bg-gray-950 p-2.5 rounded-xl border border-gray-800/80 mb-3">
-            <p class="text-gray-300 font-semibold">ઉદાહરણો:</p>
-            <p>• "હું, ક્રિશ અને રાજ ૩૦૦ ના ખાવસા ખાવા ગયા મેં ચૂકવ્યા ત્રણેયના ૧૦૦-૧૦૦ થયા"</p>
-            <p>• "રાજે ૧૫૦ ની ચા પીવડાવી મારો હિસ્સો ૫૦ હતો"</p>
-            <p>• "આજે રિક્ષા ભાડું ૨૦ રોકડા વાપર્યા"</p>
+          
+          <div class="space-y-1.5 text-[11px] text-slate-400 bg-black/40 p-3 rounded-2xl border border-white/[0.05] my-3">
+            <p class="text-slate-300 font-bold uppercase text-[9px] tracking-wider">Example Sentences:</p>
+            <p>• "hu, krish ane raj 300 na khavasa khava gaya me chukavya traney na 100-100 thaya"</p>
+            <p>• "raje 150 ni chai nasta nu payment karyu maro hisso 50 thayo"</p>
+            <p>• "aaje rikshaw ma 20 rs vaparya"</p>
           </div>
 
-          <textarea id="aiInputText" rows="3" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-3 text-xs text-white focus:outline-none focus:border-orange-500" placeholder="અહીં લખો..."></textarea>
+          <textarea id="aiInputText" rows="3" class="w-full bg-[#080b10] border border-white/10 rounded-2xl p-3.5 text-xs text-white placeholder-slate-600 focus:outline-none focus:border-orange-500 transition-all custom-scroll" placeholder="Type your expense here..."></textarea>
 
-          <button id="btnAiProcess" onclick="processAiEntry()" class="w-full mt-3 bg-gradient-to-r from-orange-500 to-amber-500 text-white font-semibold py-2.5 rounded-xl text-xs flex items-center justify-center gap-2 active:scale-95 transition-all shadow">
-            <span>🚀 હિસાબ સમજીને એન્ટ્રી પાડો</span>
+          <button id="btnAiProcess" onclick="processAiEntry()" class="w-full mt-3 bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 text-white font-bold py-3 rounded-2xl text-xs flex items-center justify-center gap-2 active:scale-95 transition-all shadow-lg shadow-orange-950/40">
+            <span>🚀 Analyze & Record Expense</span>
           </button>
         </div>
 
-        <div id="aiResultCard" class="hidden bg-gray-900 border border-gray-700 rounded-2xl p-4 space-y-3">
-          <h3 class="text-xs font-bold text-gray-200 uppercase">AI નું એનાલિસિસ:</h3>
-          <div id="aiResultContent" class="text-xs space-y-1.5 text-gray-300"></div>
-          <button onclick="confirmAiEntry()" class="w-full bg-emerald-600 hover:bg-emerald-700 text-white py-2 rounded-xl text-xs font-bold">
-            ✓ હિસાબ કન્ફર્મ કરો અને સેવ કરો
+        <div id="aiResultCard" class="hidden card-glass rounded-3xl p-5 border border-orange-500/30 space-y-3">
+          <h3 class="text-xs font-extrabold text-orange-400 uppercase tracking-wider">AI Analysis Breakdown:</h3>
+          <div id="aiResultContent" class="text-xs space-y-2 text-slate-300"></div>
+          <button onclick="confirmAiEntry()" class="w-full bg-emerald-600 hover:bg-emerald-500 text-white py-2.5 rounded-2xl text-xs font-bold active:scale-95 transition-all shadow">
+            ✓ Confirm & Save to Ledger
           </button>
         </div>
       </section>
 
-      <!-- ================= 3. PROFILE & SETTINGS TAB (CLEAN ENGLISH) ================= -->
+      <!-- ================= 3. SETTINGS TAB ================= -->
       <section id="tab-profile" class="hidden space-y-4 text-xs">
-        <div class="bg-gray-900 border border-gray-800 rounded-2xl p-4 space-y-3">
-          <h2 class="text-sm font-bold text-white mb-2">Profile Settings</h2>
+        <div class="card-glass rounded-3xl p-5 border border-white/[0.08] space-y-4">
+          <h2 class="text-sm font-bold text-white tracking-wide">Profile & Preferences</h2>
+          
           <div>
-            <label class="block text-gray-400 mb-1">Your Name:</label>
-            <input type="text" id="settingUserName" placeholder="Name" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2.5 text-white" />
+            <label class="block text-slate-400 mb-1.5 font-medium">Your Display Name:</label>
+            <input type="text" id="settingUserName" placeholder="Name" class="w-full bg-[#080b10] border border-white/10 rounded-2xl p-3 text-white focus:outline-none focus:border-orange-500" />
           </div>
+
           <div>
-            <label class="block text-gray-400 mb-1">Google Gemini API Key (Optional):</label>
-            <input type="password" id="settingApiKey" placeholder="Enter API Key from AI Studio" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2.5 text-white" />
+            <label class="block text-slate-400 mb-1.5 font-medium">Google Gemini API Key (Optional):</label>
+            <input type="password" id="settingApiKey" placeholder="Paste API Key from Google AI Studio" class="w-full bg-[#080b10] border border-white/10 rounded-2xl p-3 text-white focus:outline-none focus:border-orange-500" />
           </div>
-          <button onclick="saveProfileSettings()" class="w-full bg-orange-500 py-2.5 rounded-xl font-bold text-white active:scale-95 transition-all shadow">
+
+          <button onclick="saveProfileSettings()" class="w-full bg-orange-500 hover:bg-orange-600 py-3 rounded-2xl font-bold text-white active:scale-95 transition-all shadow-md shadow-orange-950/50">
             Save Settings
           </button>
         </div>
 
-        <div class="bg-gray-900/60 border border-gray-800 rounded-2xl p-4 space-y-2 text-gray-400">
-          <h3 class="font-bold text-gray-300">App Security & Rules:</h3>
-          <p>• <strong>10-Minute Grace Period:</strong> You can edit or delete an entry within 10 minutes of creating it.</p>
-          <p>• <strong>30-Day Lock:</strong> After 10 minutes, the entry is strictly locked for 30 days to prevent tampering.</p>
-          <p>• <strong>Privacy:</strong> All your financial calculations are saved safely in your own browser.</p>
+        <div class="card-glass rounded-3xl p-5 border border-white/[0.05] space-y-2 text-slate-400">
+          <h3 class="font-bold text-slate-200 text-xs">App Security & Rules:</h3>
+          <p>• <strong>10-Minute Grace Period:</strong> You can edit or delete an entry within 10 minutes of creation.</p>
+          <p>• <strong>30-Day Hard Lock:</strong> After 10 minutes, transactions are locked for 30 days to protect your ledger.</p>
+          <p>• <strong>Offline Privacy:</strong> All your financial calculations are saved safely in your own browser.</p>
         </div>
 
-        <button onclick="resetAllAppData()" class="w-full text-red-400 border border-red-900/50 hover:bg-red-950/30 py-2.5 rounded-xl font-semibold transition-all">
+        <button onclick="resetAllAppData()" class="w-full text-rose-400 bg-rose-950/20 border border-rose-900/30 hover:bg-rose-900/30 py-3 rounded-2xl font-bold transition-all active:scale-95">
           ⚠️ Reset All Data (Clear Everything)
         </button>
       </section>
 
     </main>
 
-    <!-- ================= BOTTOM NAVIGATION BAR ================= -->
-    <nav class="fixed bottom-0 w-full max-w-md bg-[#161a23] border-t border-gray-800 flex justify-around items-center py-2.5 z-40">
-      <button onclick="switchTab('dashboard')" id="nav-dashboard" class="flex flex-col items-center text-orange-400 text-[11px] font-medium transition-colors">
-        <span class="text-xl">📊</span>
-        <span>હિસાબ</span>
-      </button>
-
-      <button onclick="switchTab('ai')" id="nav-ai" class="flex flex-col items-center text-gray-400 text-[11px] font-medium transition-colors">
-        <span class="text-xl">✨</span>
-        <span>AI ચેટ</span>
-      </button>
-
-      <button onclick="switchTab('profile')" id="nav-profile" class="flex flex-col items-center text-gray-400 text-[11px] font-medium transition-colors">
-        <span class="text-xl">⚙️</span>
-        <span>Settings</span>
-      </button>
-    </nav>
-
-    <!-- ================= MODALS & FULL PAGES ================= -->
-
-    <!-- ONBOARDING MODAL (FAINT PLACEHOLDERS) -->
-    <div id="modalWelcome" class="fixed inset-0 bg-black/95 z-50 hidden flex items-center justify-center p-4">
-      <div class="bg-gray-900 border border-orange-500/40 w-full max-w-xs rounded-3xl p-6 space-y-4 text-center">
-        <span class="text-4xl">👋</span>
-        <h2 class="text-lg font-bold text-orange-400">Welcome to Track</h2>
-        <p class="text-xs text-gray-400 leading-relaxed">Enter your details to initialize your personal expense ledger:</p>
+    <!-- ================= FLOATING GLASS DOCK (BOTTOM NAV) ================= -->
+    <div class="fixed bottom-3 w-full max-w-md px-4 z-40 pointer-events-none">
+      <nav class="pointer-events-auto bg-[#0d121c]/90 backdrop-blur-2xl border border-white/[0.1] rounded-3xl p-2 flex justify-around items-center shadow-2xl shadow-black/80">
         
-        <div class="text-left space-y-3 pt-2 text-xs">
+        <button onclick="switchTab('dashboard')" id="nav-dashboard" class="flex flex-col items-center py-1 px-4 rounded-2xl text-orange-400 transition-all font-bold text-[10px]">
+          <span class="text-xl mb-0.5">📊</span>
+          <span>Dashboard</span>
+        </button>
+
+        <button onclick="switchTab('ai')" id="nav-ai" class="flex flex-col items-center py-1 px-4 rounded-2xl text-slate-400 hover:text-slate-200 transition-all font-semibold text-[10px]">
+          <span class="text-xl mb-0.5">✨</span>
+          <span>AI Chat</span>
+        </button>
+
+        <button onclick="switchTab('profile')" id="nav-profile" class="flex flex-col items-center py-1 px-4 rounded-2xl text-slate-400 hover:text-slate-200 transition-all font-semibold text-[10px]">
+          <span class="text-xl mb-0.5">⚙️</span>
+          <span>Settings</span>
+        </button>
+
+      </nav>
+    </div>
+
+    <!-- ================= MODALS & DRAWERS ================= -->
+
+    <!-- ONBOARDING MODAL -->
+    <div id="modalWelcome" class="fixed inset-0 bg-black/90 backdrop-blur-md z-50 hidden flex items-center justify-center p-4">
+      <div class="card-glass border border-orange-500/30 w-full max-w-xs rounded-[32px] p-6 space-y-4 text-center shadow-2xl">
+        <div class="w-14 h-14 mx-auto rounded-3xl bg-orange-500/10 border border-orange-500/20 flex items-center justify-center text-3xl">
+          👋
+        </div>
+        <h2 class="text-lg font-black text-white">Welcome to Track</h2>
+        <p class="text-xs text-slate-400 leading-relaxed">Initialize your personal expense ledger:</p>
+        
+        <div class="text-left space-y-3 pt-1 text-xs">
           <div>
-            <label class="block text-gray-400 mb-1">Your Name</label>
-            <input type="text" id="initUserName" placeholder="Name" class="w-full bg-[#161a23] border border-gray-700 placeholder-gray-600 rounded-xl p-2.5 text-white font-medium focus:outline-none focus:border-orange-500" />
+            <label class="block text-slate-400 mb-1 font-medium">Your Name</label>
+            <input type="text" id="initUserName" placeholder="Name" class="w-full bg-[#080b10] border border-white/10 rounded-2xl p-3 text-white focus:outline-none focus:border-orange-500" />
           </div>
           <div>
-            <label class="block text-gray-400 mb-1">Starting Pocket Balance (₹)</label>
-            <input type="number" id="initBalance" placeholder="0" class="w-full bg-[#161a23] border border-gray-700 placeholder-gray-600 rounded-xl p-2.5 text-white font-bold focus:outline-none focus:border-orange-500" />
+            <label class="block text-slate-400 mb-1 font-medium">Starting Balance (₹)</label>
+            <input type="number" id="initBalance" placeholder="0" class="w-full bg-[#080b10] border border-white/10 rounded-2xl p-3 text-white font-bold focus:outline-none focus:border-orange-500" />
           </div>
         </div>
 
-        <button onclick="completeOnboarding()" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold py-2.5 rounded-xl text-xs active:scale-95 shadow">
+        <button onclick="completeOnboarding()" class="w-full bg-gradient-to-r from-orange-500 to-amber-500 text-white font-bold py-3 rounded-2xl text-xs active:scale-95 shadow-lg shadow-orange-950/40">
           Get Started
         </button>
       </div>
     </div>
 
     <!-- ADJUST AVAILABLE BALANCE MODAL -->
-    <div id="modalBalance" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
-      <div class="bg-gray-900 border border-gray-700 w-full max-w-xs rounded-3xl p-5 space-y-4">
-        <h3 class="text-sm font-bold text-white">હાજર બેલેન્સ અપડેટ કરો</h3>
-        <p class="text-xs text-gray-400">તમારા ખિસ્સામાં કે બેંકમાં અત્યારે કેટલા રૂપિયા પડ્યા છે?</p>
-        <input type="number" id="inputNewBalance" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-3 text-lg font-bold text-white focus:outline-none" placeholder="0" />
-        <div class="flex gap-2">
-          <button onclick="closeModal('modalBalance')" class="w-1/2 py-2.5 rounded-xl border border-gray-700 text-xs text-gray-300">કેન્સલ</button>
-          <button onclick="saveAvailableBalance()" class="w-1/2 py-2.5 rounded-xl bg-orange-500 font-bold text-xs text-white">સેવ કરો</button>
+    <div id="modalBalance" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+      <div class="card-glass border border-white/10 w-full max-w-xs rounded-[32px] p-6 space-y-4">
+        <h3 class="text-sm font-bold text-white">Update Available Balance</h3>
+        <p class="text-xs text-slate-400">Enter your current cash or bank amount:</p>
+        <input type="number" id="inputNewBalance" class="w-full bg-[#080b10] border border-white/10 rounded-2xl p-3.5 text-xl font-black text-white text-center focus:outline-none focus:border-orange-500" placeholder="0" />
+        <div class="flex gap-2.5">
+          <button onclick="closeModal('modalBalance')" class="w-1/2 py-2.5 rounded-2xl border border-white/10 text-xs text-slate-300 font-semibold active:scale-95">Cancel</button>
+          <button onclick="saveAvailableBalance()" class="w-1/2 py-2.5 rounded-2xl bg-orange-500 font-bold text-xs text-white active:scale-95 shadow">Save</button>
         </div>
       </div>
     </div>
 
-    <!-- PERSONAL EXPENSE HISTORY MODAL -->
-    <div id="modalPersonalHistory" class="fixed inset-0 bg-black/80 z-50 hidden flex flex-col justify-end p-0">
-      <div class="bg-gray-900 border-t border-gray-700 w-full max-w-md mx-auto rounded-t-3xl max-h-[85vh] flex flex-col p-5 space-y-3">
-        <div class="flex justify-between items-center pb-2 border-b border-gray-800">
+    <!-- PERSONAL HISTORY MODAL (DRAWER STYLE) -->
+    <div id="modalPersonalHistory" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex flex-col justify-end p-0">
+      <div class="card-glass border-t border-white/10 w-full max-w-md mx-auto rounded-t-[36px] max-h-[85vh] flex flex-col p-6 space-y-4 shadow-2xl">
+        <!-- Drawer handle -->
+        <div class="w-12 h-1 bg-white/20 rounded-full mx-auto -mt-1"></div>
+
+        <div class="flex justify-between items-center pb-2 border-b border-white/[0.06]">
           <div>
-            <h3 class="text-sm font-bold text-white">અંગત ખર્ચની હિસ્ટ્રી</h3>
-            <p class="text-[11px] text-gray-400">તમે કઈ તારીખે ક્યાં કેટલા વાપર્યા</p>
+            <h3 class="text-base font-extrabold text-white">Personal Expense History</h3>
+            <p class="text-[11px] text-slate-400">Individual Spends & Outflows</p>
           </div>
-          <button onclick="closeModal('modalPersonalHistory')" class="text-gray-400 text-lg p-1">✕</button>
+          <button onclick="closeModal('modalPersonalHistory')" class="text-slate-400 hover:text-white text-xl p-1">✕</button>
         </div>
 
         <div id="personalExpenseList" class="flex-1 overflow-y-auto space-y-2.5 custom-scroll text-xs"></div>
 
-        <button onclick="closeModal('modalPersonalHistory'); openManualAddModal(true)" class="w-full bg-orange-500 py-2.5 rounded-xl text-xs font-bold text-white">
-          + નવો અંગત ખર્ચ ઉમેરો
+        <button onclick="closeModal('modalPersonalHistory'); openManualAddModal(true)" class="w-full bg-orange-500 hover:bg-orange-600 py-3 rounded-2xl text-xs font-bold text-white active:scale-95 shadow">
+          + Add Personal Expense
         </button>
       </div>
     </div>
 
-    <!-- FRIEND DETAIL VIEW MODAL -->
-    <div id="modalFriendDetail" class="fixed inset-0 bg-black/80 z-50 hidden flex flex-col justify-end p-0">
-      <div class="bg-gray-900 border-t border-gray-700 w-full max-w-md mx-auto rounded-t-3xl max-h-[90vh] flex flex-col p-5 space-y-4">
-        
+    <!-- FRIEND DETAIL MODAL (DRAWER STYLE) -->
+    <div id="modalFriendDetail" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex flex-col justify-end p-0">
+      <div class="card-glass border-t border-white/10 w-full max-w-md mx-auto rounded-t-[36px] max-h-[90vh] flex flex-col p-6 space-y-4 shadow-2xl">
+        <div class="w-12 h-1 bg-white/20 rounded-full mx-auto -mt-1"></div>
+
         <div class="flex justify-between items-start">
           <div>
-            <h3 id="friendDetailName" class="text-base font-bold text-white">મિત્રનું નામ</h3>
-            <div id="friendDetailNetBadge" class="text-xs font-semibold mt-1">નેટ બાકી: ₹0</div>
+            <h3 id="friendDetailName" class="text-lg font-black text-white">Friend Name</h3>
+            <div id="friendDetailNetBadge" class="text-xs font-bold mt-1">Net Balance: ₹0</div>
           </div>
-          <button onclick="closeModal('modalFriendDetail')" class="text-gray-400 text-lg p-1">✕</button>
+          <button onclick="closeModal('modalFriendDetail')" class="text-slate-400 hover:text-white text-xl p-1">✕</button>
         </div>
 
-        <div class="bg-[#161a23] p-3 rounded-2xl border border-gray-800 space-y-2">
-          <span class="text-[11px] font-semibold text-gray-300">ચૂકવણી / હિસાબ ક્લિયર કરો:</span>
+        <!-- Settlement Box -->
+        <div class="bg-black/40 p-3.5 rounded-2xl border border-white/[0.06] space-y-2.5">
+          <span class="text-[11px] font-bold text-slate-300 uppercase tracking-wider">Settlement & Dues:</span>
           <div class="flex gap-2">
-            <input type="number" id="inputPartialSettle" placeholder="મળેલ રકમ" class="w-2/3 bg-gray-900 border border-gray-700 rounded-xl px-3 py-2 text-xs text-white" />
-            <button onclick="submitPartialSettle()" class="w-1/3 bg-emerald-600 hover:bg-emerald-700 text-white rounded-xl text-xs font-bold">
-              જમા લો
+            <input type="number" id="inputPartialSettle" placeholder="Amount received" class="w-2/3 bg-[#080b10] border border-white/10 rounded-xl px-3 py-2 text-xs text-white focus:outline-none focus:border-emerald-500" />
+            <button onclick="submitPartialSettle()" class="w-1/3 bg-emerald-600 hover:bg-emerald-500 text-white rounded-xl text-xs font-bold active:scale-95 shadow">
+              Collect
             </button>
           </div>
-          <button onclick="submitFullSettle()" class="w-full bg-gray-800 hover:bg-gray-700 border border-gray-700 text-orange-300 py-1.5 rounded-xl text-xs font-semibold">
-            ✓ પૂરા ચૂકતે (હિસાબ ₹0 કરો)
+          <button onclick="submitFullSettle()" class="w-full bg-white/[0.04] hover:bg-white/[0.08] border border-white/10 text-orange-300 py-2 rounded-xl text-xs font-bold active:scale-95">
+            ✓ Full Settle (Clear to ₹0)
           </button>
         </div>
 
-        <div class="flex border-b border-gray-800 text-xs">
-          <button id="btnTabLevana" onclick="switchFriendSubTab('levana')" class="w-1/2 py-2 border-b-2 border-emerald-500 font-bold text-emerald-400">
-            લેવાના (To Receive)
+        <!-- Tabs -->
+        <div class="flex border-b border-white/[0.08] text-xs">
+          <button id="btnTabLevana" onclick="switchFriendSubTab('levana')" class="w-1/2 py-2.5 border-b-2 border-emerald-500 font-extrabold text-emerald-400">
+            To Receive
           </button>
-          <button id="btnTabAapvana" onclick="switchFriendSubTab('aapvana')" class="w-1/2 py-2 border-b-2 border-transparent font-medium text-gray-400">
-            આપવાના (To Pay)
+          <button id="btnTabAapvana" onclick="switchFriendSubTab('aapvana')" class="w-1/2 py-2.5 border-b-2 border-transparent font-medium text-slate-400">
+            To Pay
           </button>
         </div>
 
-        <div id="friendTransactionsList" class="flex-1 overflow-y-auto space-y-2 custom-scroll text-xs"></div>
+        <!-- Transactions list -->
+        <div id="friendTransactionsList" class="flex-1 overflow-y-auto space-y-2.5 custom-scroll text-xs"></div>
       </div>
     </div>
 
-    <!-- MANUAL QUICK ADD MODAL -->
-    <div id="modalManualAdd" class="fixed inset-0 bg-black/80 z-50 hidden flex items-center justify-center p-4">
-      <div class="bg-gray-900 border border-gray-700 w-full max-w-xs rounded-3xl p-5 space-y-3 text-xs">
-        <h3 class="text-sm font-bold text-white">નવો ખર્ચ ઉમેરો</h3>
+    <!-- MANUAL EXPENSE MODAL -->
+    <div id="modalManualAdd" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-50 hidden flex items-center justify-center p-4">
+      <div class="card-glass border border-white/10 w-full max-w-xs rounded-[32px] p-6 space-y-3.5 text-xs shadow-2xl">
+        <h3 class="text-sm font-extrabold text-white">Add New Expense</h3>
         
         <div>
-          <label class="block text-gray-400 mb-1">શેના માટે વાપર્યા? (વિગત):</label>
-          <input type="text" id="manualDesc" placeholder="દા.ત. નાસ્તો, રિક્ષા" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2.5 text-white" />
+          <label class="block text-slate-400 mb-1 font-medium">Expense Description:</label>
+          <input type="text" id="manualDesc" placeholder="e.g. Snacks, Travel" class="w-full bg-[#080b10] border border-white/10 rounded-2xl p-2.5 text-white focus:outline-none focus:border-orange-500" />
         </div>
 
         <div>
-          <label class="block text-gray-400 mb-1">કુલ રકમ (₹):</label>
-          <input type="number" id="manualAmount" placeholder="0" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2.5 text-white font-bold" />
+          <label class="block text-slate-400 mb-1 font-medium">Total Amount (₹):</label>
+          <input type="number" id="manualAmount" placeholder="0" class="w-full bg-[#080b10] border border-white/10 rounded-2xl p-2.5 text-white font-black text-base focus:outline-none focus:border-orange-500" />
         </div>
 
         <div>
-          <label class="block text-gray-400 mb-1">આ ખર્ચ કોનો છે?</label>
-          <select id="manualType" onchange="toggleManualFriendInput()" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2.5 text-white">
-            <option value="PERSONAL">મારો અંગત ખર્ચ (ફક્ત મારો)</option>
-            <option value="FRIEND_LEVAN">મિત્ર માટે ચૂકવ્યા (લેવાના નીકળે)</option>
-            <option value="FRIEND_APVAN">મિત્રએ મારા માટે ચૂકવ્યા (આપવાના)</option>
+          <label class="block text-slate-400 mb-1 font-medium">Category:</label>
+          <select id="manualType" onchange="toggleManualFriendInput()" class="w-full bg-[#080b10] border border-white/10 rounded-2xl p-2.5 text-white focus:outline-none">
+            <option value="PERSONAL">Personal (Only Mine)</option>
+            <option value="FRIEND_LEVAN">Paid for Friend (To Receive)</option>
+            <option value="FRIEND_APVAN">Friend Paid for Me (To Pay)</option>
           </select>
         </div>
 
         <div id="manualFriendBox" class="hidden">
-          <label class="block text-gray-400 mb-1">મિત્રનું નામ:</label>
-          <input type="text" id="manualFriendName" placeholder="મિત્રનું નામ" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2.5 text-white" />
+          <label class="block text-slate-400 mb-1 font-medium">Friend's Name:</label>
+          <input type="text" id="manualFriendName" placeholder="Friend Name" class="w-full bg-[#080b10] border border-white/10 rounded-2xl p-2.5 text-white focus:outline-none focus:border-orange-500" />
         </div>
 
-        <div class="flex gap-2 pt-2">
-          <button onclick="closeModal('modalManualAdd')" class="w-1/2 py-2.5 rounded-xl border border-gray-700 text-gray-300">કેન્સલ</button>
-          <button onclick="submitManualExpense()" class="w-1/2 py-2.5 rounded-xl bg-orange-500 font-bold text-white">ઉમેરો</button>
+        <div class="flex gap-2.5 pt-2">
+          <button onclick="closeModal('modalManualAdd')" class="w-1/2 py-2.5 rounded-2xl border border-white/10 text-slate-300 font-semibold active:scale-95">Cancel</button>
+          <button onclick="submitManualExpense()" class="w-1/2 py-2.5 rounded-2xl bg-orange-500 font-bold text-white active:scale-95 shadow">Save</button>
         </div>
       </div>
     </div>
 
-    <!-- ================= FULL SCREEN SECRET VAULT PAGE ================= -->
-    <div id="modalSecretVault" class="fixed inset-0 bg-[#0d0f12] z-50 hidden flex flex-col w-full h-full max-w-md mx-auto">
+    <!-- ================= FULL-SCREEN SECRET VAULT PAGE ================= -->
+    <div id="modalSecretVault" class="fixed inset-0 bg-[#05070a] z-50 hidden flex flex-col w-full h-full max-w-md mx-auto">
       
-      <!-- 1. VAULT PIN ENTRY OVERLAY -->
+      <!-- PIN Verification Screen -->
       <div id="vaultPinSection" class="flex-1 flex flex-col justify-center items-center p-6 text-center">
-        <div class="w-16 h-16 rounded-3xl bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-3xl mb-4">
-          🔐
+        <div class="w-20 h-20 rounded-[28px] bg-amber-500/10 border border-amber-500/30 flex items-center justify-center text-4xl mb-4 glow-gold">
+          🤫
         </div>
-        <h2 class="text-xl font-extrabold text-amber-400 tracking-wide">Secret Vault</h2>
-        <p class="text-xs text-gray-400 mt-1 mb-6">Enter your 4-digit PIN to access private savings</p>
+        <h2 class="text-2xl font-black text-amber-400 tracking-tight">Secret Vault</h2>
+        <p class="text-xs text-slate-400 mt-1 mb-8">Enter your 4-digit PIN to access private savings</p>
         
-        <input type="password" maxlength="4" id="vaultPinInput" class="w-36 text-center tracking-[0.5em] text-2xl font-black bg-gray-900 border border-gray-700 rounded-2xl p-3 text-white focus:outline-none focus:border-amber-500 mb-6 shadow-inner" placeholder="••••" />
+        <input type="password" maxlength="4" id="vaultPinInput" class="w-40 text-center tracking-[0.5em] text-3xl font-black bg-black/60 border border-amber-500/30 rounded-3xl p-3 text-amber-300 focus:outline-none focus:border-amber-400 mb-8 shadow-inner" placeholder="••••" />
         
         <div class="flex gap-3 w-full max-w-xs">
-          <button onclick="closeSecretVault()" class="w-1/2 py-3 rounded-2xl border border-gray-700 text-xs font-semibold text-gray-400 active:scale-95">Cancel</button>
-          <button onclick="verifyVaultPin()" class="w-1/2 py-3 rounded-2xl bg-amber-600 font-bold text-xs text-white active:scale-95 shadow-lg shadow-amber-900/30">Unlock</button>
+          <button onclick="closeSecretVault()" class="w-1/2 py-3 rounded-2xl border border-white/10 text-xs font-bold text-slate-400 active:scale-95">Cancel</button>
+          <button onclick="verifyVaultPin()" class="w-1/2 py-3 rounded-2xl bg-amber-600 hover:bg-amber-500 font-bold text-xs text-white active:scale-95 shadow-lg shadow-amber-950/40">Unlock</button>
         </div>
       </div>
 
-      <!-- 2. FULL SCREEN VAULT DASHBOARD -->
+      <!-- Main Vault Dashboard -->
       <div id="vaultMainSection" class="hidden flex-1 flex flex-col h-full overflow-hidden">
         
-        <!-- Vault Header -->
-        <div class="p-4 border-b border-gray-800 flex justify-between items-center bg-[#161a23]">
+        <!-- Header -->
+        <div class="p-4 border-b border-white/[0.08] flex justify-between items-center bg-[#090d14]/90 backdrop-blur-xl">
           <div class="flex items-center gap-2">
             <span class="text-xl">🤫</span>
-            <span class="font-extrabold text-amber-400 text-sm">Secret Savings Vault</span>
+            <span class="font-black text-amber-400 text-sm">Secret Savings Vault</span>
           </div>
           <div class="flex items-center gap-2">
-            <button onclick="openChangePinModal()" class="text-[11px] text-gray-400 bg-gray-800 hover:text-white px-2.5 py-1 rounded-xl border border-gray-700">
+            <button onclick="openChangePinModal()" class="text-[11px] text-amber-300/80 bg-white/[0.04] px-3 py-1 rounded-xl border border-amber-500/20 active:scale-95 font-medium">
               🔑 Change PIN
             </button>
-            <button onclick="closeSecretVault()" class="text-gray-400 text-lg px-2">✕</button>
+            <button onclick="closeSecretVault()" class="text-slate-400 hover:text-white text-lg px-2">✕</button>
           </div>
         </div>
 
-        <!-- Vault Content (Scrollable) -->
-        <div class="flex-1 p-4 overflow-y-auto custom-scroll space-y-4">
+        <!-- Vault Content -->
+        <div class="flex-1 p-5 overflow-y-auto custom-scroll space-y-5">
           
-          <!-- Big Vault Balance Card -->
-          <div class="bg-gradient-to-br from-amber-700 via-amber-800 to-amber-950 rounded-3xl p-6 text-center border border-amber-600/40 shadow-xl relative overflow-hidden">
-            <span class="text-[11px] uppercase tracking-wider text-amber-200 font-medium">તમારી છુપી બચત (Hidden Balance)</span>
-            <div id="vaultBalanceDisplay" class="text-4xl font-black text-amber-300 my-2">₹0</div>
-            <p class="text-[10px] text-amber-200/70">આ રકમ બહારની મેઈન સ્ક્રીન પર ક્યાંય દેખાશે નહીં.</p>
+          <!-- Balance Card -->
+          <div class="bg-gradient-to-br from-[#854d0e] via-[#713f12] to-[#422006] rounded-[28px] p-6 text-center border border-amber-500/30 glow-gold relative overflow-hidden">
+            <span class="text-[10px] uppercase tracking-widest text-amber-200/80 font-bold">TOTAL HIDDEN BALANCE</span>
+            <div id="vaultBalanceDisplay" class="text-4xl sm:text-5xl font-black text-amber-300 my-2 drop-shadow">₹0</div>
+            <p class="text-[10px] text-amber-200/60 font-medium">This amount will never appear on the main dashboard.</p>
           </div>
 
           <!-- Deposit & Withdraw Form -->
-          <div class="bg-[#161a23] p-4 rounded-2xl border border-gray-800 space-y-3">
-            <label class="block text-xs font-semibold text-gray-300">રૂપિયા છુપાવો અથવા બહાર કાઢો:</label>
-            <input type="number" id="vaultAmountInput" placeholder="0" class="w-full bg-gray-900 border border-gray-700 rounded-xl p-3 text-sm text-white font-bold focus:outline-none focus:border-amber-500" />
+          <div class="card-glass p-4 rounded-3xl border border-white/[0.08] space-y-3">
+            <label class="block text-xs font-bold text-slate-300">Deposit or Withdraw Cash:</label>
+            <input type="number" id="vaultAmountInput" placeholder="0" class="w-full bg-[#080b10] border border-white/10 rounded-2xl p-3 text-sm text-white font-black text-center focus:outline-none focus:border-amber-500" />
             <div class="flex gap-2.5">
-              <button onclick="vaultDeposit()" class="w-1/2 bg-amber-600 hover:bg-amber-500 py-2.5 rounded-xl text-white font-bold text-xs active:scale-95 shadow">
-                ↓ છુપાવો (Deposit)
+              <button onclick="vaultDeposit()" class="w-1/2 bg-amber-600 hover:bg-amber-500 py-3 rounded-2xl text-white font-bold text-xs active:scale-95 shadow">
+                ↓ Deposit
               </button>
-              <button onclick="vaultWithdraw()" class="w-1/2 bg-emerald-600 hover:bg-emerald-500 py-2.5 rounded-xl text-white font-bold text-xs active:scale-95 shadow">
-                ↑ બહાર કાઢો (Withdraw)
+              <button onclick="vaultWithdraw()" class="w-1/2 bg-emerald-600 hover:bg-emerald-500 py-3 rounded-2xl text-white font-bold text-xs active:scale-95 shadow">
+                ↑ Withdraw
               </button>
             </div>
           </div>
 
-          <!-- Vault Transaction History -->
-          <div class="space-y-2 pt-1">
+          <!-- History -->
+          <div class="space-y-2.5 pt-1">
             <div class="flex justify-between items-center">
-              <h4 class="text-xs font-bold text-gray-300 uppercase tracking-wider">તિજોરી હિસ્ટ્રી (Vault History)</h4>
-              <span class="text-[10px] text-gray-500" id="vaultHistoryCount">0 વ્યવહારો</span>
+              <h4 class="text-xs font-bold text-slate-400 uppercase tracking-wider">VAULT HISTORY</h4>
+              <span class="text-[10px] text-slate-500" id="vaultHistoryCount">0 transactions</span>
             </div>
             
-            <div id="vaultHistoryList" class="space-y-2">
-              <!-- Dynamic Vault History -->
-            </div>
+            <div id="vaultHistoryList" class="space-y-2.5"></div>
           </div>
 
         </div>
 
-        <!-- Lock Vault Bottom Button -->
-        <div class="p-3 border-t border-gray-800 bg-[#161a23]">
-          <button onclick="closeSecretVault()" class="w-full bg-gray-800 hover:bg-gray-700 text-gray-300 font-semibold py-2.5 rounded-xl text-xs flex items-center justify-center gap-1.5 active:scale-95">
+        <div class="p-4 border-t border-white/[0.08] bg-[#090d14]">
+          <button onclick="closeSecretVault()" class="w-full bg-white/[0.05] hover:bg-white/[0.08] text-slate-300 font-bold py-3 rounded-2xl text-xs active:scale-95 transition-all">
             🔒 Lock Vault & Exit
           </button>
         </div>
 
       </div>
 
-      <!-- CHANGE PIN SUB-MODAL -->
-      <div id="modalChangePin" class="fixed inset-0 bg-black/80 z-60 hidden flex items-center justify-center p-4">
-        <div class="bg-gray-900 border border-gray-700 w-full max-w-xs rounded-3xl p-5 space-y-3 text-xs">
+      <!-- Change PIN Modal -->
+      <div id="modalChangePin" class="fixed inset-0 bg-black/80 backdrop-blur-sm z-60 hidden flex items-center justify-center p-4">
+        <div class="card-glass border border-white/10 w-full max-w-xs rounded-[32px] p-6 space-y-3.5 text-xs">
           <h3 class="text-sm font-bold text-white">Change Secret PIN</h3>
           <div>
-            <label class="block text-gray-400 mb-1">Old PIN:</label>
-            <input type="password" maxlength="4" id="inputOldPin" placeholder="••••" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2 text-white text-center font-bold" />
+            <label class="block text-slate-400 mb-1">Old PIN:</label>
+            <input type="password" maxlength="4" id="inputOldPin" placeholder="••••" class="w-full bg-[#080b10] border border-white/10 rounded-2xl p-2.5 text-white text-center font-black tracking-widest" />
           </div>
           <div>
-            <label class="block text-gray-400 mb-1">New 4-digit PIN:</label>
-            <input type="password" maxlength="4" id="inputNewPin" placeholder="••••" class="w-full bg-[#161a23] border border-gray-700 rounded-xl p-2 text-white text-center font-bold" />
+            <label class="block text-slate-400 mb-1">New 4-digit PIN:</label>
+            <input type="password" maxlength="4" id="inputNewPin" placeholder="••••" class="w-full bg-[#080b10] border border-white/10 rounded-2xl p-2.5 text-white text-center font-black tracking-widest" />
           </div>
           <div class="flex gap-2 pt-2">
-            <button onclick="closeChangePinModal()" class="w-1/2 py-2 rounded-xl border border-gray-700 text-gray-300">Cancel</button>
-            <button onclick="saveNewPin()" class="w-1/2 py-2 rounded-xl bg-amber-600 font-bold text-white">Update PIN</button>
+            <button onclick="closeChangePinModal()" class="w-1/2 py-2.5 rounded-2xl border border-white/10 text-slate-300 font-semibold active:scale-95">Cancel</button>
+            <button onclick="saveNewPin()" class="w-1/2 py-2.5 rounded-2xl bg-amber-600 font-bold text-white active:scale-95 shadow">Update PIN</button>
           </div>
         </div>
       </div>
@@ -417,7 +475,7 @@
 
   <!-- JAVASCRIPT LOGIC -->
   <script>
-    const STORAGE_KEY = 'track_hisab_app_clean_v3';
+    const STORAGE_KEY = 'track_hisab_app_clean_v5';
 
     let appData = {
       userName: '',
@@ -461,12 +519,14 @@
     function switchTab(tab) {
       ['dashboard', 'ai', 'profile'].forEach(t => {
         document.getElementById(`tab-${t}`).classList.add('hidden');
-        document.getElementById(`nav-${t}`).classList.remove('text-orange-400');
-        document.getElementById(`nav-${t}`).classList.add('text-gray-400');
+        const navEl = document.getElementById(`nav-${t}`);
+        navEl.classList.remove('text-orange-400');
+        navEl.classList.add('text-slate-400');
       });
       document.getElementById(`tab-${tab}`).classList.remove('hidden');
-      document.getElementById(`nav-${tab}`).classList.add('text-orange-400');
-      document.getElementById(`nav-${tab}`).classList.remove('text-gray-400');
+      const activeNav = document.getElementById(`nav-${tab}`);
+      activeNav.classList.add('text-orange-400');
+      activeNav.classList.remove('text-slate-400');
     }
 
     function openModal(id) { document.getElementById(id).classList.remove('hidden'); }
@@ -498,26 +558,27 @@
         });
 
         const isPositive = net >= 0;
-        const colorClass = isPositive ? 'text-emerald-400' : 'text-red-400';
+        const colorClass = isPositive ? 'text-emerald-400' : 'text-rose-400';
         const sign = isPositive ? '+' : '-';
-        const label = isPositive ? 'લેવાના' : 'આપવાના';
+        const label = isPositive ? 'To Receive' : 'To Pay';
+        const badgeBg = isPositive ? 'bg-emerald-950/60 border-emerald-800/60 text-emerald-300' : 'bg-rose-950/60 border-rose-800/60 text-rose-300';
 
         const card = document.createElement('div');
-        card.className = "bg-[#161a23] border border-gray-800 rounded-2xl p-4 flex items-center justify-between cursor-pointer active:scale-[0.98] transition-transform";
+        card.className = "card-glass card-glass-hover rounded-2xl p-4 flex items-center justify-between cursor-pointer transition-all shadow-sm";
         card.onclick = () => openFriendDetail(name);
         card.innerHTML = `
           <div class="flex items-center gap-3">
-            <div class="w-10 h-10 rounded-full bg-gray-800 border border-gray-700 flex items-center justify-center text-sm font-bold text-orange-300">
-              ${name.charAt(0)}
+            <div class="w-11 h-11 rounded-2xl bg-white/[0.04] border border-white/10 flex items-center justify-center text-sm font-black text-orange-300 shadow-inner">
+              ${name.charAt(0).toUpperCase()}
             </div>
             <div>
-              <h4 class="font-bold text-sm text-white">${name}</h4>
-              <p class="text-[11px] text-gray-400">${txs.length} વ્યવહારો નોંધાયેલા</p>
+              <h4 class="font-extrabold text-sm text-white">${name}</h4>
+              <p class="text-[11px] text-slate-400 font-medium">${txs.length} transactions</p>
             </div>
           </div>
           <div class="text-right">
-            <div class="text-base font-extrabold ${colorClass}">${sign} ₹${Math.abs(net)}</div>
-            <div class="text-[10px] text-gray-400">${label}</div>
+            <div class="text-base font-black ${colorClass}">${sign} ₹${Math.abs(net)}</div>
+            <span class="text-[9px] font-bold px-2 py-0.5 rounded-full border ${badgeBg}">${label}</span>
           </div>
         `;
         friendsContainer.appendChild(card);
@@ -526,11 +587,11 @@
       const overallNet = totalToReceive - totalToPay;
       const netBadge = document.getElementById('netFriendsBadge');
       if (overallNet >= 0) {
-        netBadge.className = "font-bold px-2 py-0.5 rounded-full text-xs bg-emerald-950 text-emerald-300 border border-emerald-800";
-        netBadge.innerText = `+ ₹${overallNet} (લેવાના)`;
+        netBadge.className = "font-extrabold px-2.5 py-0.5 rounded-full text-xs bg-emerald-950/80 text-emerald-300 border border-emerald-800/80";
+        netBadge.innerText = `+ ₹${overallNet} (To Receive)`;
       } else {
-        netBadge.className = "font-bold px-2 py-0.5 rounded-full text-xs bg-red-950 text-red-300 border border-red-800";
-        netBadge.innerText = `- ₹${Math.abs(overallNet)} (આપવાના)`;
+        netBadge.className = "font-extrabold px-2.5 py-0.5 rounded-full text-xs bg-rose-950/80 text-rose-300 border border-rose-800/80";
+        netBadge.innerText = `- ₹${Math.abs(overallNet)} (To Pay)`;
       }
     }
 
@@ -551,23 +612,23 @@
       const list = document.getElementById('personalExpenseList');
       list.innerHTML = '';
       if (!appData.personalExpenses || appData.personalExpenses.length === 0) {
-        list.innerHTML = `<div class="text-center text-gray-500 py-6">કોઈ અંગત ખર્ચ નોંધાયેલ નથી.</div>`;
+        list.innerHTML = `<div class="text-center text-slate-500 py-8">No personal expenses logged yet.</div>`;
       } else {
         appData.personalExpenses.forEach((exp) => {
           const lockStatus = getLockStatus(exp.timestamp);
           const item = document.createElement('div');
-          item.className = "bg-[#161a23] p-3 rounded-xl border border-gray-800 flex justify-between items-center";
+          item.className = "card-glass p-3.5 rounded-2xl flex justify-between items-center";
           item.innerHTML = `
             <div>
               <p class="font-bold text-white text-xs">${exp.desc}</p>
-              <p class="text-[10px] text-gray-400">${exp.date || 'આજે'} • ${lockStatus.label}</p>
+              <p class="text-[10px] text-slate-400 mt-0.5">${exp.date || 'Today'} • ${lockStatus.label}</p>
             </div>
             <div class="flex items-center gap-2">
-              <span class="font-extrabold text-orange-400">₹${exp.amount}</span>
+              <span class="font-black text-orange-400 text-sm">₹${exp.amount}</span>
               ${lockStatus.canDelete ? `
-                <button onclick="deletePersonalExpense(${exp.id})" class="text-red-400 hover:text-red-300 text-xs px-1">🗑️</button>
+                <button onclick="deletePersonalExpense(${exp.id})" class="text-rose-400 hover:text-rose-300 text-xs p-1">🗑️</button>
               ` : `
-                <span class="text-gray-500 text-xs">🔒</span>
+                <span class="text-slate-500 text-xs" title="Locked">🔒</span>
               `}
             </div>
           `;
@@ -578,7 +639,7 @@
     }
 
     function deletePersonalExpense(id) {
-      if (confirm('શું આ ખર્ચ ડિલીટ કરવો છે?')) {
+      if (confirm('Delete this expense?')) {
         const item = appData.personalExpenses.find(e => e.id === id);
         if (item) {
           appData.availableBalance += item.amount;
@@ -596,11 +657,11 @@
 
       if (diffMs <= tenMinutesMs) {
         const remainingMin = Math.ceil((tenMinutesMs - diffMs) / 60000);
-        return { canDelete: true, label: `⏱️️ ${remainingMin} મિનિટમાં લૉક થશે` };
+        return { canDelete: true, label: `⏱ Locks in ${remainingMin}m` };
       } else if (diffMs < thirtyDaysMs) {
-        return { canDelete: false, label: '🔒 લૉક (30 દિવસ)' };
+        return { canDelete: false, label: '🔒 Locked (30d)' };
       } else {
-        return { canDelete: true, label: '🔓 જૂનો હિસાબ' };
+        return { canDelete: true, label: '🔓 Unlocked' };
       }
     }
 
@@ -621,11 +682,11 @@
       const btnA = document.getElementById('btnTabAapvana');
 
       if (subTab === 'levana') {
-        btnL.className = "w-1/2 py-2 border-b-2 border-emerald-500 font-bold text-emerald-400";
-        btnA.className = "w-1/2 py-2 border-b-2 border-transparent font-medium text-gray-400";
+        btnL.className = "w-1/2 py-2.5 border-b-2 border-emerald-500 font-extrabold text-emerald-400";
+        btnA.className = "w-1/2 py-2.5 border-b-2 border-transparent font-medium text-slate-400";
       } else {
-        btnA.className = "w-1/2 py-2 border-b-2 border-red-500 font-bold text-red-400";
-        btnL.className = "w-1/2 py-2 border-b-2 border-transparent font-medium text-gray-400";
+        btnA.className = "w-1/2 py-2.5 border-b-2 border-rose-500 font-extrabold text-rose-400";
+        btnL.className = "w-1/2 py-2.5 border-b-2 border-transparent font-medium text-slate-400";
       }
       renderFriendModalContent();
     }
@@ -643,10 +704,10 @@
       const netBadge = document.getElementById('friendDetailNetBadge');
       if (net >= 0) {
         netBadge.className = "text-xs font-bold text-emerald-400";
-        netBadge.innerText = `કુલ લેવાના બાકી: ₹${net}`;
+        netBadge.innerText = `Net To Receive: ₹${net}`;
       } else {
-        netBadge.className = "text-xs font-bold text-red-400";
-        netBadge.innerText = `કુલ આપવાના બાકી: ₹${Math.abs(net)}`;
+        netBadge.className = "text-xs font-bold text-rose-400";
+        netBadge.innerText = `Net To Pay: ₹${Math.abs(net)}`;
       }
 
       const list = document.getElementById('friendTransactionsList');
@@ -656,23 +717,23 @@
       const filtered = txs.filter(t => t.type === targetType);
 
       if (filtered.length === 0) {
-        list.innerHTML = `<div class="text-center text-gray-500 py-6">આ ટેબમાં કોઈ વ્યવહાર નથી.</div>`;
+        list.innerHTML = `<div class="text-center text-slate-500 py-8">No records in this tab.</div>`;
       } else {
         filtered.forEach(tx => {
           const lock = getLockStatus(tx.timestamp);
           const item = document.createElement('div');
-          item.className = "bg-[#161a23] p-3 rounded-xl border border-gray-800 flex justify-between items-center";
+          item.className = "card-glass p-3.5 rounded-2xl flex justify-between items-center";
           item.innerHTML = `
             <div>
               <p class="font-bold text-white text-xs">${tx.desc}</p>
-              <p class="text-[10px] text-gray-400">${tx.date || 'આજે'} • ${lock.label}</p>
+              <p class="text-[10px] text-slate-400 mt-0.5">${tx.date || 'Today'} • ${lock.label}</p>
             </div>
             <div class="flex items-center gap-2">
-              <span class="font-extrabold ${tx.type === 'TO_RECEIVE' ? 'text-emerald-400' : 'text-red-400'}">₹${tx.amount}</span>
+              <span class="font-black ${tx.type === 'TO_RECEIVE' ? 'text-emerald-400' : 'text-rose-400'} text-sm">₹${tx.amount}</span>
               ${lock.canDelete ? `
-                <button onclick="deleteFriendTx(${tx.id})" class="text-red-400 text-xs px-1">🗑️</button>
+                <button onclick="deleteFriendTx(${tx.id})" class="text-rose-400 text-xs p-1">🗑️</button>
               ` : `
-                <span class="text-gray-500 text-xs">🔒</span>
+                <span class="text-slate-500 text-xs">🔒</span>
               `}
             </div>
           `;
@@ -682,7 +743,7 @@
     }
 
     function deleteFriendTx(txId) {
-      if (confirm('આ એન્ટ્રી ડિલીટ કરવી છે?')) {
+      if (confirm('Delete this transaction?')) {
         appData.friendsKhata[currentFriendName] = appData.friendsKhata[currentFriendName].filter(t => t.id !== txId);
         saveData();
         renderFriendModalContent();
@@ -691,13 +752,13 @@
 
     function submitPartialSettle() {
       const val = parseFloat(document.getElementById('inputPartialSettle').value);
-      if (!val || val <= 0) { alert('સાચી રકમ નાખો'); return; }
+      if (!val || val <= 0) { alert('Enter valid amount'); return; }
 
       appData.availableBalance += val;
       appData.friendsKhata[currentFriendName].push({
         id: Date.now(),
         type: 'TO_PAY',
-        desc: 'અંશતઃ ચૂકવણી જમા',
+        desc: 'Partial Payment Settled',
         amount: val,
         date: new Date().toLocaleDateString('en-GB'),
         timestamp: Date.now()
@@ -706,7 +767,7 @@
       document.getElementById('inputPartialSettle').value = '';
       saveData();
       renderFriendModalContent();
-      alert(`₹${val} જમા થયા અને તમારા હાજર બેલેન્સમાં ઉમેરાઈ ગયા!`);
+      alert(`₹${val} received and credited to your Available Balance!`);
     }
 
     function submitFullSettle() {
@@ -717,15 +778,15 @@
         else net -= t.amount;
       });
 
-      if (net === 0) { alert('હિસાબ પહેલેથી જ ₹0 છે!'); return; }
+      if (net === 0) { alert('Account is already settled to ₹0!'); return; }
 
-      if (confirm(`શું ${currentFriendName} નો પૂરેપૂરો હિસાબ ચૂકતે કરવો છે?`)) {
+      if (confirm(`Fully settle all dues with ${currentFriendName}?`)) {
         if (net > 0) {
           appData.availableBalance += net;
           appData.friendsKhata[currentFriendName].push({
             id: Date.now(),
             type: 'TO_PAY',
-            desc: 'પૂરા ચૂકતે (હિસાબ ક્લિયર)',
+            desc: 'Full Settlement (Dues Cleared)',
             amount: net,
             date: new Date().toLocaleDateString('en-GB'),
             timestamp: Date.now()
@@ -735,7 +796,7 @@
           appData.friendsKhata[currentFriendName].push({
             id: Date.now(),
             type: 'TO_RECEIVE',
-            desc: 'પૂરા ચૂકતે (મેં ચૂકવ્યા)',
+            desc: 'Full Settlement (Paid Off)',
             amount: Math.abs(net),
             date: new Date().toLocaleDateString('en-GB'),
             timestamp: Date.now()
@@ -743,7 +804,7 @@
         }
         saveData();
         renderFriendModalContent();
-        alert('હિસાબ સંપૂર્ણપણે ₹0 થઈ ગયો!');
+        alert('Account fully settled to ₹0!');
       }
     }
 
@@ -766,12 +827,12 @@
     }
 
     function submitManualExpense() {
-      const desc = document.getElementById('manualDesc').value.trim() || 'ખર્ચ';
+      const desc = document.getElementById('manualDesc').value.trim() || 'Expense';
       const amount = parseFloat(document.getElementById('manualAmount').value);
       const type = document.getElementById('manualType').value;
       const friendName = document.getElementById('manualFriendName').value.trim();
 
-      if (!amount || amount <= 0) { alert('સાચી રકમ નાખો'); return; }
+      if (!amount || amount <= 0) { alert('Enter valid amount'); return; }
 
       const dateStr = new Date().toLocaleDateString('en-GB', { month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' });
 
@@ -785,7 +846,7 @@
           timestamp: Date.now()
         });
       } else {
-        if (!friendName) { alert('મિત્રનું નામ લખો'); return; }
+        if (!friendName) { alert('Enter friend name'); return; }
         if (!appData.friendsKhata[friendName]) appData.friendsKhata[friendName] = [];
 
         if (type === 'FRIEND_LEVAN') {
@@ -814,7 +875,7 @@
       closeModal('modalManualAdd');
     }
 
-    // ================= SECRET VAULT LOGIC (FULL SCREEN & PIN PROTECTED) =================
+    // ================= SECRET VAULT LOGIC =================
     let pressTimer = null;
     const logoEl = document.getElementById('logoTitle');
 
@@ -860,21 +921,21 @@
       histList.innerHTML = '';
 
       const hist = appData.vaultHistory || [];
-      document.getElementById('vaultHistoryCount').innerText = `${hist.length} વ્યવહારો`;
+      document.getElementById('vaultHistoryCount').innerText = `${hist.length} transactions`;
 
       if (hist.length === 0) {
-        histList.innerHTML = `<div class="text-center text-gray-500 py-6 text-xs">તિજોરીમાં હજી કોઈ લેવડ-દેવડ નથી થઈ.</div>`;
+        histList.innerHTML = `<div class="text-center text-slate-500 py-8 text-xs">No transactions in vault yet.</div>`;
       } else {
         hist.forEach(h => {
           const isDep = h.type === 'DEPOSIT';
           const item = document.createElement('div');
-          item.className = "bg-gray-900/80 p-3 rounded-xl border border-gray-800 flex justify-between items-center text-xs";
+          item.className = "card-glass p-3.5 rounded-2xl flex justify-between items-center text-xs";
           item.innerHTML = `
             <div>
-              <p class="font-bold text-white">${isDep ? '↓ તિજોરીમાં છુપાવ્યા' : '↑ બહાર કાઢ્યા'}</p>
-              <p class="text-[10px] text-gray-400">${h.date}</p>
+              <p class="font-bold text-white">${isDep ? '↓ Deposited to Vault' : '↑ Withdrawn to Balance'}</p>
+              <p class="text-[10px] text-slate-400 mt-0.5">${h.date}</p>
             </div>
-            <span class="font-extrabold ${isDep ? 'text-amber-400' : 'text-emerald-400'}">
+            <span class="font-black ${isDep ? 'text-amber-400' : 'text-emerald-400'} text-sm">
               ${isDep ? '+' : '-'} ₹${h.amount}
             </span>
           `;
@@ -887,7 +948,7 @@
       const amt = parseFloat(document.getElementById('vaultAmountInput').value);
       if (!amt || amt <= 0) return;
       if (amt > appData.availableBalance) {
-        alert('તમારા હાજર બેલેન્સ કરતા વધુ રકમ છુપાવી ન શકાય!');
+        alert('Cannot deposit more than your current Available Balance!');
         return;
       }
       appData.availableBalance -= amt;
@@ -904,14 +965,14 @@
       document.getElementById('vaultAmountInput').value = '';
       saveData();
       renderVaultDashboard();
-      alert(`₹${amt} ગુપ્ત તિજોરીમાં છુપાવી દીધા!`);
+      alert(`₹${amt} stored in Secret Vault!`);
     }
 
     function vaultWithdraw() {
       const amt = parseFloat(document.getElementById('vaultAmountInput').value);
       if (!amt || amt <= 0) return;
       if (amt > (appData.secretBalance || 0)) {
-        alert('તિજોરીમાં આટલા રૂપિયા નથી!');
+        alert('Insufficient balance in Secret Vault!');
         return;
       }
       appData.secretBalance -= amt;
@@ -928,7 +989,7 @@
       document.getElementById('vaultAmountInput').value = '';
       saveData();
       renderVaultDashboard();
-      alert(`₹${amt} તિજોરીમાંથી કાઢીને મેઈન બેલેન્સમાં ઉમેર્યા!`);
+      alert(`₹${amt} withdrawn to Available Balance!`);
     }
 
     function openChangePinModal() {
@@ -962,10 +1023,10 @@
 
     async function processAiEntry() {
       const text = document.getElementById('aiInputText').value.trim();
-      if (!text) { alert('કંઈક લખો તો ખરા!'); return; }
+      if (!text) { alert('Please enter some text'); return; }
 
       const btn = document.getElementById('btnAiProcess');
-      btn.innerText = 'પ્રોસેસ થઈ રહ્યું છે... ⏳';
+      btn.innerText = 'Analyzing... ⏳';
       btn.disabled = true;
 
       try {
@@ -980,12 +1041,12 @@
           pendingAiParsedData = result;
           renderAiResultCard(result);
         } else {
-          alert('AI સમજી શક્યું નહીં, ફરી લખો.');
+          alert('Could not parse the text. Try rephrasing.');
         }
       } catch(err) {
         alert('Error: ' + err.message);
       } finally {
-        btn.innerText = '🚀 હિસાબ સમજીને એન્ટ્રી પાડો';
+        btn.innerText = '🚀 Analyze & Record Expense';
         btn.disabled = false;
       }
     }
@@ -1007,7 +1068,7 @@
         }
       });
 
-      let desc = 'ખર્ચ';
+      let desc = 'Expense';
       ['ખાવસા', 'ચા', 'નાસ્તો', 'રિક્ષા', 'ઝેરોક્ષ', 'દૂધ', 'પાર્ટી'].forEach(item => {
         if (text.includes(item)) desc = item;
       });
@@ -1039,15 +1100,15 @@
 
       let splitsHtml = '';
       if (data.splits && data.splits.length > 0) {
-        splitsHtml = data.splits.map(s => `<div>• <strong>${s.friendName}</strong> પાસેથી લેવાના: <span class="text-emerald-400 font-bold">₹${s.amount}</span></div>`).join('');
+        splitsHtml = data.splits.map(s => `<div>• Receive from <strong>${s.friendName}</strong>: <span class="text-emerald-400 font-bold">₹${s.amount}</span></div>`).join('');
       } else {
-        splitsHtml = `<div>• ફક્ત અંગત ખર્ચ છે</div>`;
+        splitsHtml = `<div>• Personal expense only</div>`;
       }
 
       box.innerHTML = `
-        <div>📌 ખર્ચ: <strong>${data.desc}</strong> (કુલ: ₹${data.totalAmount})</div>
-        <div>🙋 અંગત હિસ્સો: <strong class="text-orange-400">₹${data.myShare}</strong></div>
-        <div class="pt-1 border-t border-gray-800 text-[11px]">${splitsHtml}</div>
+        <div>📌 Description: <strong>${data.desc}</strong> (Total: ₹${data.totalAmount})</div>
+        <div>🙋 Your Share: <strong class="text-orange-400">₹${data.myShare}</strong></div>
+        <div class="pt-2 border-t border-white/[0.08] text-[11px]">${splitsHtml}</div>
       `;
     }
 
@@ -1085,7 +1146,7 @@
       document.getElementById('aiInputText').value = '';
       document.getElementById('aiResultCard').classList.add('hidden');
       switchTab('dashboard');
-      alert('✓ હિસાબ સેવ થઈ ગયો!');
+      alert('✓ Expense recorded to ledger successfully!');
     }
 
     async function callGeminiApi(promptText, apiKey) {
@@ -1113,7 +1174,7 @@
     }
 
     function resetAllAppData() {
-      if (confirm('Are you sure you want to reset everything? This will permanently wipe all ledger data.')) {
+      if (confirm('Are you sure you want to reset everything? This will wipe all local data.')) {
         localStorage.removeItem(STORAGE_KEY);
         location.reload();
       }
