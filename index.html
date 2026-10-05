@@ -383,6 +383,42 @@
             <option value="FRIEND_APVAN">Friend Paid for Me (To Pay)</option>
           </select>
         </div>
+        <!-- MULTI FRIEND SPLIT CONTAINER -->
+<div id="multiFriendSection" style="display: none; margin-top: 12px; background: rgba(255,255,255,0.03); padding: 12px; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08);">
+  
+  <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 10px;">
+    <!-- સરખા ભાગે ટીક બટન -->
+    <label style="color: #ff7a00; font-size: 13px; font-weight: 600; display: flex; align-items: center; gap: 6px; cursor: pointer;">
+      <input type="checkbox" id="splitEquallyCheck" checked onchange="toggleSplitMode()"> સરખા ભાગે (Equal)
+    </label>
+    <!-- પોતાનો ભાગ સામેલ -->
+    <label style="color: #94a3b8; font-size: 12px; display: flex; align-items: center; gap: 5px; cursor: pointer;">
+      <input type="checkbox" id="splitIncludeMeCheck" checked onchange="recalcSplit()"> મારો ભાગ સામેલ
+    </label>
+  </div>
+
+  <!-- મિત્રોના નામ અને રૂપિયાનું લિસ્ટ -->
+  <div id="friendsInputsList" style="display: flex; flex-direction: column; gap: 8px;"></div>
+
+  <!-- Add Friend બટન -->
+  <button type="button" onclick="addSplitFriendRow()" style="margin-top: 10px; width: 100%; padding: 8px; background: rgba(255,122,0,0.1); color: #ff7a00; border: 1px dashed rgba(255,122,0,0.4); border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer;">
+    + Add Friend
+  </button>
+
+  <!-- લાઇવ ગણતરી હિસાબ -->
+  <div style="margin-top: 10px; padding: 10px; background: rgba(0,0,0,0.3); border-radius: 8px; font-size: 12px; color: #cbd5e1; line-height: 1.6;">
+    <div style="display: flex; justify-content: space-between;">
+      <span>મિત્રો પાસેથી લેવાના:</span>
+      <b id="calcFriendsTotal" style="color: #4ade80;">₹0</b>
+    </div>
+    <div style="display: flex; justify-content: space-between;">
+      <span>મારો સાચો ખર્ચ:</span>
+      <b id="calcMyShare" style="color: #ff7a00;">₹0</b>
+    </div>
+    <div id="splitErrorText" style="color: #f87171; font-weight: bold; display: none; margin-top: 4px;"></div>
+  </div>
+</div>
+
 
         <div id="manualFriendBox" class="hidden">
           <label class="block text-slate-400 mb-1 font-medium">Friend's Name:</label>
