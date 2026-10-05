@@ -882,60 +882,233 @@
     }
 
     function toggleManualFriendInput() {
-      const type = document.getElementById('manualType').value;
-      const box = document.getElementById('manualFriendBox');
-      if (type === 'PERSONAL') box.classList.add('hidden');
-      else box.classList.remove('hidden');
-    }
+  const type = document.getElementById('manualType').value;
+  const friendBox = document.getElementById('manualFriendBox');
+  const multiBox = document.getElementById('multiFriendSection');
 
-    function submitManualExpense() {
-      const desc = document.getElementById('manualDesc').value.trim() || 'Expense';
-      const amount = parseFloat(document.getElementById('manualAmount').value);
-      const type = document.getElementById('manualType').value;
-      const friendName = document.getElementById('manualFriendName').value.trim();
+  // Amount બોક્સમાં ટાઈપ કરતાં જ લાઇવ ગણતરી અપડેટ થાય તે માટે
+  const amtInput = document.getElementById('manualAmount');
+  if (amtInput && !amtInput.dataset.listenerAttached) {
+    amtInput.addEventListener('input', recalcSplit);
+    amtInput.dataset.listenerAttached = 'true';
+  }
 
-      if (!amount || amount <= 0) { alert('Enter valid amount'); return; }
-
-      const dateStr = new Date().toLocaleDateString('en-GB', { month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit' });
-
-      if (type === 'PERSONAL') {
-        appData.availableBalance -= amount;
-        appData.personalExpenses.unshift({
-          id: Date.now(),
-          desc: desc,
-          amount: amount,
-          date: dateStr,
-          timestamp: Date.now()
-        });
-      } else {
-        if (!friendName) { alert('Enter friend name'); return; }
-        if (!appData.friendsKhata[friendName]) appData.friendsKhata[friendName] = [];
-
-        if (type === 'FRIEND_LEVAN') {
-          appData.availableBalance -= amount;
-          appData.friendsKhata[friendName].push({
-            id: Date.now(),
-            type: 'TO_RECEIVE',
-            desc: desc,
-            amount: amount,
-            date: dateStr,
-            timestamp: Date.now()
-          });
-        } else {
-          appData.friendsKhata[friendName].push({
-            id: Date.now(),
-            type: 'TO_PAY',
-            desc: desc,
-            amount: amount,
-            date: dateStr,
-            timestamp: Date.now()
-          });
-        }
+  if (type === 'PERSONAL') {
+    if (friendBox) friendBox.classList.add('hidden');
+    if (multiBox) multiBox.style.display = 'none';
+  } else if (type === 'FRIEND_APVAN') {
+    // મિત્રે મારા માટે ચૂકવ્યા (ફક્ત ૧ મિત્રનું નામ)
+    if (friendBox) friendBox.classList.remove('hidden');
+    if (multiBox) multiBox.style.display = 'none';
+  } else if (type === 'FRIEND_LEVAN') {
+    // મિત્રો માટે ચૂકવ્યા (મલ્ટિપલ ગ્રૂપ સ્પ્લિટ)
+    if (friendBox) friendBox.classList.add('hidden');
+    if (multiBox) {
+      multiBox.style.display = 'block';
+      const container = document.getElementById('friendsInputsList');
+      if (container && container.children.length === 0) {
+        addSplitFriendRow();
       }
-
-      saveData();
-      closeModal('modalManualAdd');
+      recalcSplit();
     }
+  }
+}
+
+// મિત્રનું નામ + રકમ ઉમેરવાનું ફંક્શન
+function addSplitFriendRow(name = '', amount = '') {
+  const container = document.getElementById('friendsInputsList');
+  if (!container) return;
+  const isEqually = document.getElementById('splitEquallyCheck')?.checked ?? true;
+  const row = document.createElement('div');
+  row.className = 'split-friend-row';
+  row.style.cssText = 'display: flex; gap: 6px; align-items: center;';
+
+  row.innerHTML = `
+    <input type="text" class="split-name" placeholder="મિત્રનું નામ" value="${name}" oninput="recalcSplit()" 
+      style="flex: 1; padding: 8px 10px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #fff; font-size: 13px;">
+    <input type="number" class="split-amount" placeholder="₹ રકમ" value="${amount}" oninput="recalcSplit()" 
+      style="width: 85px; padding: 8px 10px; background: rgba(0,0,0,0.4); border: 1px solid rgba(255,255,255,0.15); border-radius: 8px; color: #fff; font-size: 13px; display: ${isEqually ? 'none' : 'block'};">
+    <button type="button" onclick="this.parentElement.remove(); recalcSplit();" 
+      style="padding: 7px 11px; background: rgba(239,68,68,0.2); color: #ef4444; border: 1px solid rgba(239,68,68,0.3); border-radius: 8px; cursor: pointer; font-weight: bold;">✕</button>
+  `;
+  container.appendChild(row);
+  recalcSplit();
+}
+
+// સરખા ભાગે ચેકબોક્સ ટોગલ
+function toggleSplitMode() {
+  const isEqually = document.getElementById('splitEquallyCheck')?.checked ?? true;
+  document.querySelectorAll('.split-amount').forEach(el => {
+    el.style.display = isEqually ? 'none' : 'block';
+  });
+  recalcSplit();
+}
+
+// લાઇવ ગણતરી (Live Calculation - Zero Math Error)
+function recalcSplit() {
+  const totalAmount = parseFloat(document.getElementById('manualAmount')?.value) || 0;
+  const isEqually = document.getElementById('splitEquallyCheck')?.checked ?? true;
+  const includeMe = document.getElementById('splitIncludeMeCheck')?.checked ?? true;
+  const rows = document.querySelectorAll('.split-friend-row');
+
+  let validNames = [];
+  rows.forEach(r => {
+    const val = r.querySelector('.split-name')?.value.trim();
+    if (val) validNames.push(val);
+  });
+
+  let friendsTotal = 0;
+  let errorMsg = '';
+
+  if (isEqually) {
+    const totalHeads = validNames.length + (includeMe ? 1 : 0);
+    if (totalHeads > 0 && validNames.length > 0) {
+      const perHead = Math.round((totalAmount / totalHeads) * 100) / 100;
+      friendsTotal = perHead * validNames.length;
+    }
+  } else {
+    rows.forEach(r => {
+      const amtVal = parseFloat(r.querySelector('.split-amount')?.value) || 0;
+      friendsTotal += amtVal;
+    });
+    if (friendsTotal > totalAmount) {
+      errorMsg = '⚠️ મિત્રોની રકમ કુલ રકમ કરતાં વધી ગઈ છે!';
+    }
+  }
+
+  const myShare = Math.max(0, totalAmount - friendsTotal);
+
+  const friendsEl = document.getElementById('calcFriendsTotal');
+  const myEl = document.getElementById('calcMyShare');
+  const errEl = document.getElementById('splitErrorText');
+
+  if (friendsEl) friendsEl.innerText = '₹' + Math.round(friendsTotal);
+  if (myEl) myEl.innerText = '₹' + Math.round(myShare);
+
+  if (errEl) {
+    if (errorMsg) {
+      errEl.innerText = errorMsg;
+      errEl.style.display = 'block';
+    } else {
+      errEl.style.display = 'none';
+    }
+  }
+}
+
+// સેવ કરવાનું મુખ્ય ફંક્શન
+function submitManualExpense() {
+  const desc = document.getElementById('manualDesc').value.trim();
+  const amount = parseFloat(document.getElementById('manualAmount').value);
+  const type = document.getElementById('manualType').value;
+  const friendName = document.getElementById('manualFriendName')?.value.trim() || '';
+
+  if (!amount || amount <= 0) {
+    alert('કૃપા કરીને સાચી રકમ લખો!');
+    return;
+  }
+
+  const dateStr = new Date().toLocaleDateString('en-IN', {
+    day: 'numeric',
+    month: 'short',
+    hour: '2-digit',
+    minute: '2-digit'
+  });
+
+  // ૧. પોતાનો પર્સનલ ખર્ચ
+  if (type === 'PERSONAL') {
+    appData.availableBalance -= amount;
+    appData.personalExpenses.unshift({
+      id: Date.now(),
+      desc: desc || 'Personal Expense',
+      amount: amount,
+      date: dateStr,
+      timestamp: Date.now()
+    });
+  } 
+  // ૨. મિત્રે મારા વતી ચૂકવ્યા (Friend Paid for Me)
+  else if (type === 'FRIEND_APVAN') {
+    if (!friendName) {
+      alert('કૃપા કરીને મિત્રનું નામ લખો!');
+      return;
+    }
+    if (!appData.friendsKhata[friendName]) appData.friendsKhata[friendName] = [];
+    appData.friendsKhata[friendName].unshift({
+      id: Date.now(),
+      type: 'TO_PAY',
+      desc: desc || 'Expense',
+      amount: amount,
+      date: dateStr,
+      timestamp: Date.now()
+    });
+  } 
+  // ૩. મિત્રો માટે ચૂકવ્યા (ગ્રૂપ સ્પ્લિટ - Equal અથવા Custom)
+  else if (type === 'FRIEND_LEVAN') {
+    const isEqually = document.getElementById('splitEquallyCheck')?.checked ?? true;
+    const includeMe = document.getElementById('splitIncludeMeCheck')?.checked ?? true;
+    const rows = document.querySelectorAll('.split-friend-row');
+
+    let friendsList = [];
+    rows.forEach(r => {
+      const fName = r.querySelector('.split-name')?.value.trim();
+      const fAmt = parseFloat(r.querySelector('.split-amount')?.value) || 0;
+      if (fName) friendsList.push({ name: fName, amount: fAmt });
+    });
+
+    if (friendsList.length === 0) {
+      alert('કૃપા કરીને ઓછામાં ઓછા ૧ મિત્રનું નામ લખો!');
+      return;
+    }
+
+    if (isEqually) {
+      const totalHeads = friendsList.length + (includeMe ? 1 : 0);
+      const splitPerHead = Math.round((amount / totalHeads) * 100) / 100;
+      friendsList.forEach(f => f.amount = splitPerHead);
+    } else {
+      const totalGiven = friendsList.reduce((sum, f) => sum + f.amount, 0);
+      if (totalGiven > amount) {
+        alert('ભૂલ: મિત્રોની કુલ રકમ ₹' + totalGiven + ' એ કુલ ચૂકવેલ ₹' + amount + ' કરતાં વધારે છે!');
+        return;
+      }
+    }
+
+    // Available Balance માંથી પૂરા રૂપિયા કપાશે
+    appData.availableBalance -= amount;
+
+    // દરેક મિત્રના ખાતાવહીમાં રકમ જમા
+    friendsList.forEach((f, idx) => {
+      if (!appData.friendsKhata[f.name]) appData.friendsKhata[f.name] = [];
+      appData.friendsKhata[f.name].unshift({
+        id: Date.now() + idx,
+        type: 'TO_RECEIVE',
+        desc: desc || 'Group Spend',
+        amount: f.amount,
+        date: dateStr,
+        timestamp: Date.now() + idx
+      });
+    });
+
+    // સાચો પર્સનલ ખર્ચ (જો તમારો ભાગ હોય તો)
+    const totalFriendsAmt = friendsList.reduce((sum, f) => sum + f.amount, 0);
+    const myRealShare = Math.max(0, amount - totalFriendsAmt);
+    if (myRealShare > 0) {
+      appData.personalExpenses.unshift({
+        id: Date.now() + 999,
+        desc: (desc || 'Group Spend') + ' (મારો ભાગ)',
+        amount: myRealShare,
+        date: dateStr,
+        timestamp: Date.now() + 999
+      });
+    }
+
+    // આગળ માટે રો સાફ કરવી
+    const container = document.getElementById('friendsInputsList');
+    if (container) container.innerHTML = '';
+  }
+
+  saveData();
+  closeModal('modalManualAdd');
+}
+
 
     // ================= SECRET VAULT LOGIC =================
     let tapCount = 0;
