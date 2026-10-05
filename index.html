@@ -1035,36 +1035,85 @@
 
     // ================= AI PARSER =================
     let pendingAiParsedData = null;
+let noticeTimer = null;
 
-    async function processAiEntry() {
-      const text = document.getElementById('aiInputText').value.trim();
-      if (!text) { alert('Please enter some text'); return; }
+// 4 Seconds Auto-Hide Notice
+function showAiNotice(message) {
+  const box = document.getElementById('aiNoticeBox');
+  const txt = document.getElementById('aiNoticeText');
+  if (!box || !txt) return;
 
-      const btn = document.getElementById('btnAiProcess');
-      btn.innerText = 'Analyzing... ⏳';
-      btn.disabled = true;
+  txt.innerText = message || "Please set your Gemini API Key in Settings to use AI Chat.";
+  box.classList.remove('hidden');
 
-      try {
-        let result = null;
-        if (appData.apiKey && appData.apiKey.trim().length > 10) {
-          result = await callGeminiApi(text, appData.apiKey);
-        } else {
-          result = offlineGujaratiParser(text);
-        }
+  if (noticeTimer) clearTimeout(noticeTimer);
+  noticeTimer = setTimeout(() => {
+    hideNotice();
+  }, 4000);
+}
 
-        if (result) {
-          pendingAiParsedData = result;
-          renderAiResultCard(result);
-        } else {
-          alert('Could not parse the text. Try rephrasing.');
-        }
-      } catch(err) {
-        alert('Error: ' + err.message);
-      } finally {
-        btn.innerText = '🚀 Analyze & Record Expense';
-        btn.disabled = false;
-      }
+function hideNotice() {
+  const box = document.getElementById('aiNoticeBox');
+  if (box) box.classList.add('hidden');
+}
+
+// Strict AI Entry: Only Real Gemini API & Online
+async function processAiEntry() {
+  hideNotice();
+
+  const textInput = document.getElementById('aiInputText');
+  const text = textInput ? textInput.value.trim() : '';
+
+  // 1. Check Input
+  if (!text) {
+    showAiNotice("Please enter transaction details first.");
+    return;
+  }
+
+  // 2. Check Internet
+  if (!navigator.onLine) {
+    showAiNotice("No internet connection! Please go online to use AI Chat.");
+    return;
+  }
+
+  // 3. Check Gemini API Key
+  const apiKey = (typeof appData !== 'undefined' && appData.apiKey) ? appData.apiKey : (localStorage.getItem('gemini_api_key') || localStorage.getItem('apiKey'));
+  if (!apiKey) {
+    showAiNotice("Gemini API Key missing! Please add your key in Settings.");
+    return;
+  }
+
+  const btn = document.getElementById('btnAiProcess');
+  if (btn) {
+    btn.innerText = 'Analyzing... ⏳';
+    btn.disabled = true;
+  }
+
+  try {
+    let result = null;
+    if (typeof callGeminiApi === 'function') {
+      result = await callGeminiApi(text, apiKey);
     }
+
+    if (result) {
+      pendingAiParsedData = result;
+      if (typeof renderAiResultCard === 'function') {
+        renderAiResultCard(result);
+      }
+    } else {
+      showAiNotice("Could not understand transaction. Please try again.");
+    }
+  } catch (err) {
+    console.error("AI Error:", err);
+    showAiNotice("AI processing failed. Check your API key or network.");
+  } finally {
+    if (btn) {
+      btn.innerHTML = '<span>🚀 Analyze & Record Expense</span>';
+      btn.disabled = false;
+    }
+  }
+}
+
 
     function offlineGujaratiParser(text) {
       const numbers = text.match(/\d+/g);
