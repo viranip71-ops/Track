@@ -1,4 +1,4 @@
-const CACHE_NAME = 'track-offline-v3';
+const CACHE_NAME = 'track-offline-v4';
 const STATIC_ASSETS = [
   './',
   './index.html',
