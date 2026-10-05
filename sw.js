@@ -1,12 +1,13 @@
-const CACHE_NAME = 'track-offline-v2';
+const CACHE_NAME = 'track-offline-v3';
 const STATIC_ASSETS = [
   './',
   './index.html',
   './manifest.json',
-  './logo.png'
+  './logo.png',
+  'https://cdn.tailwindcss.com'
 ];
 
-// 1. App install thay tyare badhi mukhya files cache ma save karo
+// 1. Install & Cache
 self.addEventListener('install', (event) => {
   event.waitUntil(
     caches.open(CACHE_NAME).then((cache) => {
@@ -16,7 +17,7 @@ self.addEventListener('install', (event) => {
   self.skipWaiting();
 });
 
-// 2. Navi version aave tyare juni cache saaf karo
+// 2. Activate & Clean Old Cache
 self.addEventListener('activate', (event) => {
   event.waitUntil(
     caches.keys().then((keys) => {
@@ -28,7 +29,7 @@ self.addEventListener('activate', (event) => {
   self.clients.claim();
 });
 
-// 3. Internet hoy to net thi load karo ane offline hoy to cache mathi aapo
+// 3. Fetch
 self.addEventListener('fetch', (event) => {
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
@@ -50,7 +51,10 @@ self.addEventListener('fetch', (event) => {
           return networkResponse;
         })
         .catch(() => {
-          return caches.match('./index.html');
+          // Khali page navigate thay to j index.html aapo
+          if (event.request.mode === 'navigate') {
+            return caches.match('./index.html');
+          }
         });
     })
   );
