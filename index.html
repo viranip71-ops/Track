@@ -168,6 +168,15 @@
           <button id="btnAiProcess" onclick="processAiEntry()" class="w-full mt-3 bg-gradient-to-r from-orange-500 via-amber-500 to-orange-600 text-white font-bold py-3 rounded-2xl text-xs flex items-center justify-center gap-2 active:scale-95 transition-all shadow-lg shadow-orange-950/40">
             <span>🚀 Analyze & Record Expense</span>
           </button>
+                  <!-- 4s Notice Warning Box -->
+        <div id="aiNoticeBox" class="hidden mt-3 p-3 bg-amber-500/10 border border-amber-500/30 rounded-xl text-amber-400 text-xs flex items-center justify-between transition-all duration-300">
+          <div class="flex items-center gap-2">
+            <span>⚠️</span>
+            <span id="aiNoticeText">Please set your Gemini API Key in Settings to use AI Chat.</span>
+          </div>
+          <button type="button" onclick="hideNotice()" class="text-amber-400 hover:text-white font-bold ml-2 text-sm">✖</button>
+        </div>
+
         </div>
 
         <div id="aiResultCard" class="hidden card-glass rounded-3xl p-5 border border-orange-500/30 space-y-3">
