@@ -1,61 +1,54 @@
-const CACHE_NAME = 'track-offline-v4';
-const STATIC_ASSETS = [
-  './',
-  './index.html',
-  './manifest.json',
-  './logo.png',
-  'https://cdn.tailwindcss.com'
-];
+const CACHE_NAME = 'track-cache-smart';
 
-// 1. Install & Cache
 self.addEventListener('install', (event) => {
-  event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(STATIC_ASSETS);
-    })
-  );
   self.skipWaiting();
 });
 
-// 2. Activate & Clean Old Cache
 self.addEventListener('activate', (event) => {
-  event.waitUntil(
-    caches.keys().then((keys) => {
-      return Promise.all(
-        keys.filter((key) => key !== CACHE_NAME).map((key) => caches.delete(key))
-      );
-    })
-  );
-  self.clients.claim();
+  event.waitUntil(self.clients.claim());
 });
 
-// 3. Fetch
+// સ્માર્ટ હેન્ડલિંગ: એપ તરત ખુલશે, નેટ હોય તો બેકગ્રાઉન્ડમાં ચેક થશે
 self.addEventListener('fetch', (event) => {
+  if (event.request.method !== 'GET') return;
+
   event.respondWith(
     caches.match(event.request).then((cachedResponse) => {
-      if (cachedResponse) {
-        return cachedResponse;
-      }
-      return fetch(event.request)
-        .then((networkResponse) => {
-          if (
-            event.request.method === 'GET' &&
-            networkResponse &&
-            networkResponse.status === 200
-          ) {
-            const responseClone = networkResponse.clone();
-            caches.open(CACHE_NAME).then((cache) => {
-              cache.put(event.request, responseClone);
-            });
+      // બેકગ્રાઉન્ડ નેટવર્ક ચેક
+      const networkFetch = fetch(event.request, { cache: 'no-cache' })
+        .then(async (networkResponse) => {
+          if (networkResponse && networkResponse.status === 200) {
+            // જો index.html હોય, તો ચેક કરો કે કોડ બદલાયો છે?
+            if (event.request.mode === 'navigate' || event.request.url.includes('index.html')) {
+              const newHtml = await networkResponse.clone().text();
+              const oldHtml = cachedResponse ? await cachedResponse.clone().text() : '';
+
+              // જો ગિટહબ પર નવો કોડ મળ્યો તો જ કેશ બદલો અને એપ રિલોડ કરાવો
+              if (oldHtml && newHtml !== oldHtml) {
+                const cache = await caches.open(CACHE_NAME);
+                await cache.put(event.request, networkResponse.clone());
+                
+                // એપને આપમેળે રિફ્રેશ કરવાનો મેસેજ મોકલો
+                const clients = await self.clients.matchAll();
+                clients.forEach((client) => {
+                  client.postMessage({ action: 'AUTO_UPDATE_RELOAD' });
+                });
+                return networkResponse;
+              }
+            }
+
+            // અન્ય ફાઈલો કેશમાં સેવ કરી લો
+            const cache = await caches.open(CACHE_NAME);
+            cache.put(event.request, networkResponse.clone());
           }
           return networkResponse;
         })
         .catch(() => {
-          // Khali page navigate thay to j index.html aapo
-          if (event.request.mode === 'navigate') {
-            return caches.match('./index.html');
-          }
+          // નેટ બંધ હોય ત્યારે શાંતિથી કેશ વાપરો
         });
+
+      // કેશ હોય તો તરત ડિસ્પ્લે કરો, ના હોય તો નેટમાંથી લાવો
+      return cachedResponse || networkFetch;
     })
   );
 });
