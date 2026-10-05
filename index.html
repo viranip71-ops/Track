@@ -902,22 +902,27 @@
     }
 
     // ================= SECRET VAULT LOGIC =================
-    let pressTimer = null;
-    const logoEl = document.getElementById('userBadge');
+    let tapCount = 0;
+let tapTimer = null;
+const vaultEl = document.getElementById('userBadge');
 
-    function startLongPress() {
-      pressTimer = setTimeout(() => {
-        openSecretVaultPage();
-      }, 3000);
-    }
-    function cancelLongPress() {
-      if (pressTimer) clearTimeout(pressTimer);
-    }
+if (vaultEl) {
+  vaultEl.addEventListener('click', (e) => {
+    e.preventDefault();
+    tapCount++;
+    clearTimeout(tapTimer);
 
-    logoEl.addEventListener('touchstart', startLongPress);
-    logoEl.addEventListener('touchend', cancelLongPress);
-    logoEl.addEventListener('mousedown', startLongPress);
-    logoEl.addEventListener('mouseup', cancelLongPress);
+    if (tapCount === 3) {
+      tapCount = 0;
+      openSecretVaultPage();
+    } else {
+      tapTimer = setTimeout(() => {
+        tapCount = 0;
+      }, 1000);
+    }
+  });
+}
+
 
     function openSecretVaultPage() {
       document.getElementById('vaultPinInput').value = '';
